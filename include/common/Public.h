@@ -7,6 +7,7 @@
 #include <iomanip>
 #include <regex>
 #include <string>
+#include <iostream>
 
 
 struct PlaybackClockTime {
@@ -15,16 +16,17 @@ struct PlaybackClockTime {
 
     [[nodiscard]] int minutes() const { return totalSeconds / 60; }
     [[nodiscard]] int seconds() const { return totalSeconds % 60; }
-    [[nodiscard]] std::string toDisplayString() const ;
 
-    [[nodiscard]] int operator-(const PlaybackClockTime& other) const { return totalSeconds - other.totalSeconds; }
+    [[nodiscard]] std::string toDisplayString() const;
 
-    [[nodiscard]] bool operator==(const PlaybackClockTime& other) const { return totalSeconds == other.totalSeconds; }
-    [[nodiscard]] bool operator!=(const PlaybackClockTime& other) const { return totalSeconds != other.totalSeconds; }
-    [[nodiscard]] bool operator<(const PlaybackClockTime& other) const { return totalSeconds < other.totalSeconds; }
-    [[nodiscard]] bool operator<=(const PlaybackClockTime& other) const { return totalSeconds <= other.totalSeconds; }
-    [[nodiscard]] bool operator>(const PlaybackClockTime& other) const { return totalSeconds > other.totalSeconds; }
-    [[nodiscard]] bool operator>=(const PlaybackClockTime& other) const { return totalSeconds >= other.totalSeconds; }
+    [[nodiscard]] int operator-(const PlaybackClockTime &other) const { return totalSeconds - other.totalSeconds; }
+
+    [[nodiscard]] bool operator==(const PlaybackClockTime &other) const { return totalSeconds == other.totalSeconds; }
+    [[nodiscard]] bool operator!=(const PlaybackClockTime &other) const { return totalSeconds != other.totalSeconds; }
+    [[nodiscard]] bool operator<(const PlaybackClockTime &other) const { return totalSeconds < other.totalSeconds; }
+    [[nodiscard]] bool operator<=(const PlaybackClockTime &other) const { return totalSeconds <= other.totalSeconds; }
+    [[nodiscard]] bool operator>(const PlaybackClockTime &other) const { return totalSeconds > other.totalSeconds; }
+    [[nodiscard]] bool operator>=(const PlaybackClockTime &other) const { return totalSeconds >= other.totalSeconds; }
 };
 
 struct AppleMusicMetadata {
@@ -53,13 +55,13 @@ struct AppleMusicMetadata {
 
     std::optional<std::string> artworkPath;
 
-    AppleMusicMetadata& operator=(const AppleMusicMetadata&) = default;
+    AppleMusicMetadata &operator=(const AppleMusicMetadata &) = default;
 
-    static void printOptionalField(const std::string& label, const std::optional<std::string>& value) {
+    static void printOptionalField(const std::string &label, const std::optional<std::string> &value) {
         std::cout << label << ": " << (value ? *value : "not provided") << '\n';
     }
 
-    static void printOptionalField(const std::string& label, const std::optional<int>& value) {
+    static void printOptionalField(const std::string &label, const std::optional<int> &value) {
         if (value) {
             std::cout << label << ": " << *value << '\n';
         } else {
@@ -68,7 +70,34 @@ struct AppleMusicMetadata {
     }
 };
 
-inline std::string sanitizeFileName(const std::string& title, std::size_t maxLen = 180) {
+// enum MetadataState {
+//     // 录制异常
+//     未初始化,
+//
+//     // 录制失败
+//     未从头播放,
+//     存在缓存卡顿,
+//     中途切歌,
+//
+//     // 录制成功
+//     完整录制
+// };
+// struct Task {
+//     AppleMusicMetadata metadata;
+//     bool isProcessing;
+//     bool finished;
+// };
+//
+// struct MetadataProcessor {
+//     std::queue<Task> tasks;
+//
+//     Task getTask() {
+//
+//     }
+// };
+
+
+inline std::string sanitizeFileName(const std::string &title, const std::size_t maxLen = 180) {
     std::string s = title;
 
     // 1) 把最危险、最常见的文件名问题字符替换掉
@@ -86,7 +115,7 @@ inline std::string sanitizeFileName(const std::string& title, std::size_t maxLen
     s = std::regex_replace(s, multiSpace, " ");
 
     // 4) 去掉首尾空格
-    auto trim = [](std::string& str) {
+    auto trim = [](std::string &str) {
         auto notSpace = [](unsigned char ch) { return !std::isspace(ch); };
         str.erase(str.begin(), std::find_if(str.begin(), str.end(), notSpace));
         str.erase(std::find_if(str.rbegin(), str.rend(), notSpace).base(), str.end());
@@ -118,15 +147,14 @@ inline std::string sanitizeFileName(const std::string& title, std::size_t maxLen
 }
 
 namespace TermFix {
-
-    static inline std::string trim(const std::string& s) {
+    static inline std::string trim(const std::string &s) {
         const auto begin = s.find_first_not_of(" \t\r\n");
         if (begin == std::string::npos) return "";
         const auto end = s.find_last_not_of(" \t\r\n");
         return s.substr(begin, end - begin + 1);
     }
 
-    static inline bool startsWith(const std::string& s, const std::string& prefix) {
+    static inline bool startsWith(const std::string &s, const std::string &prefix) {
         return s.rfind(prefix, 0) == 0;
     }
 
@@ -135,7 +163,7 @@ namespace TermFix {
         std::string value;
     };
 
-    static std::vector<SoxField> parseSoxHeader(const std::string& headerText) {
+    static std::vector<SoxField> parseSoxHeader(const std::string &headerText) {
         std::vector<SoxField> fields;
         std::istringstream iss(headerText);
         std::string line;
@@ -169,13 +197,13 @@ namespace TermFix {
         }
     }
 
-    static void rewriteSoxHeaderAligned(const std::string& headerText) {
+    static void rewriteSoxHeaderAligned(const std::string &headerText) {
         auto fields = parseSoxHeader(headerText);
         if (fields.empty()) return;
 
         // 计算 key 最大宽度，让冒号对齐
         std::size_t maxKeyLen = 0;
-        for (const auto& f : fields) {
+        for (const auto &f: fields) {
             maxKeyLen = std::max(maxKeyLen, f.key.size());
         }
 
@@ -190,18 +218,19 @@ namespace TermFix {
 
         moveCursorUp(5);
 
-        for (const auto& f : fields) {
+        for (const auto &f: fields) {
             std::cout << std::setw(static_cast<int>(maxKeyLen))
-                      << std::right
-                      << f.key
-                      << ": "
-                      << f.value
-                      << '\n';
+                    << std::right
+                    << f.key
+                    << ": "
+                    << f.value
+                    << '\n';
         }
 
         std::cout << '\n';
         std::cout.flush();
     }
-
 } // namespace TermFix
+
+
 #endif //MUSICCAT_PUBLIC_H

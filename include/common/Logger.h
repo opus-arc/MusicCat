@@ -10,6 +10,7 @@
 
 #include <spdlog/logger.h>
 
+
 class Logger {
 public:
     static void init();
@@ -33,5 +34,13 @@ public:
 private:
     static std::shared_ptr<spdlog::logger> logger_;
 };
+
+inline bool isTesting = false;
+
+inline void testLog(const std::string &message) {
+    if (isTesting)
+        Logger::debug(message);
+}
+
 
 #endif // MUSICCAT_LOGMANAGER_H

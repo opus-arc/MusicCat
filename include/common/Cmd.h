@@ -11,7 +11,7 @@ class Cmd {
 public:
     static std::string runCmdCapture(const std::string& cmd);
     static int runCmdInteractive(const std::string& cmd);
-    static void stopRecording();
+    static pid_t runCmdAsync(const std::string& cmd);
 };
 
 

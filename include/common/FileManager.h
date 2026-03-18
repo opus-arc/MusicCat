@@ -24,7 +24,7 @@ public:
     static void txt_kvPair_writer(const std::string& path, const std::string& k, const std::string& v);
 
     // 删除一个文件夹底下的所有 jpg 后缀的文件
-    static void deleteJpg();
+    static void deleteJpg(const std::string& title);
 
 };
 

@@ -33,6 +33,27 @@ void Logger::init() {
     // Console output
     const auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
 
+    class ConsoleFormatterNoInfo : public spdlog::formatter {
+    public:
+        void format(const spdlog::details::log_msg& msg, spdlog::memory_buf_t& dest) override {
+            std::string payload(msg.payload.begin(), msg.payload.end());
+
+            if (msg.level == spdlog::level::info) {
+                fmt::format_to(std::back_inserter(dest), "{}\n", payload);
+            } else {
+                auto level_sv = spdlog::level::to_string_view(msg.level);
+                std::string level(level_sv.data(), level_sv.size());
+                fmt::format_to(std::back_inserter(dest), "[{}] {}\n", level, payload);
+            }
+        }
+
+        std::unique_ptr<spdlog::formatter> clone() const override {
+            return std::make_unique<ConsoleFormatterNoInfo>();
+        }
+    };
+
+    console_sink->set_formatter(std::make_unique<ConsoleFormatterNoInfo>());
+
     // File output with rotation
     const auto file_sink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(
         logFile,
@@ -44,7 +65,7 @@ void Logger::init() {
 
     logger_ = std::make_shared<spdlog::logger>("musiccat", sinks.begin(), sinks.end());
 
-    logger_->set_pattern("[%Y-%m-%d %H:%M:%S] [%^%l%$] %v");
+    file_sink->set_pattern("[%Y-%m-%d %H:%M:%S] [%^%l%$] %v");
     logger_->set_level(spdlog::level::debug);
 
     spdlog::set_default_logger(logger_);
@@ -177,5 +198,3 @@ void Logger::printLog() {
         std::cout << lines[i] << '\n';
     }
 }
-
-

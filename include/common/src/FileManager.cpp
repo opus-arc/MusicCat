@@ -5,6 +5,8 @@
 #include "../FileManager.h"
 
 #include "Entity.h"
+#include "Logger.h"
+#include "Public.h"
 
 bool FileManager::ensure_path(const std::filesystem::path& p) {
     std::filesystem::path dir = p.has_parent_path() ? p.parent_path() : std::filesystem::path();
@@ -89,18 +91,18 @@ void FileManager::txt_kvPair_writer(const std::string &path, const std::string &
     }
 }
 
-void FileManager::deleteJpg() {
+void FileManager::deleteJpg(const std::string& title) {
+    testLog("deleteJpg: 开始删除指定的 jpg 文件");
+    testLog("deleteJpg: 线程: " + title);
+
     const std::filesystem::path jpgFolderPath = Entity::getOutputFolderPath();
+    const std::string titlePathStr = title + ".jpg";
+    const std::filesystem::path jpgPath = Entity::getOutputFolderPath() / titlePathStr;
+
 
     if (!std::filesystem::exists(jpgFolderPath) || !std::filesystem::is_directory(jpgFolderPath))
         return;
 
-    for (const auto& entry : std::filesystem::directory_iterator(jpgFolderPath)) {
-        if (!entry.is_regular_file())
-            continue;
-
-        if (entry.path().extension() == ".jpg") {
-            std::filesystem::remove(entry.path());
-        }
-    }
+    testLog("deleteJpg: jpgPath: " + jpgPath.string());
+    std::filesystem::remove(jpgPath);
 }

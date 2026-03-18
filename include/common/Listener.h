@@ -10,6 +10,7 @@
 
 
 class Listener {
+    bool isRunning_;
 public:
     Listener(std::function<bool()> trigger,
              std::function<void()> callback_true,
@@ -31,8 +32,18 @@ public:
 
     void off();
 
+    bool status() const;
+
+    void setLastTrigger_false();
+
+    void setLastTrigger_true();
+
+    void sendTrueSignal();
+
+    void sendFalseSignal();
+
 private:
-    void run() const;
+    void run();
 
     std::function<bool()> trigger_;
     std::function<void()> callback_true;
@@ -42,6 +53,11 @@ private:
     std::atomic<bool> enabled_{false};
     std::atomic<bool> stop_requested_{false};
     std::thread worker_;
+
+    bool last_trigger_state = false;
+    bool trueSignal_ = false;
+    bool falseSignal_ = false;
+
 };
 
 

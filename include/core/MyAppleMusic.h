@@ -13,13 +13,23 @@
 class MyAppleMusic {
 public:
 
+    static bool isRestart;
+    static double lastTime;
+    static std::chrono::time_point<std::chrono::steady_clock> lastCheck;
+    static std::string lastTrackId;
+    static std::string _lastTrackId;
+
     static bool isRunning();
 
     static bool isPlaying();
 
     static std::string currentTrackId();
 
+    static double getCurrentPlaybackTime();
+
     static bool isNextTrack();
+
+    static bool isPlayingPrue();
 
     static bool isCurrentTrackNearBeginning(int toleranceMs);
 
@@ -27,7 +37,7 @@ public:
 
     static void printAppleMusicMetadata(const AppleMusicMetadata& metadata);
 
-    static void scrapingCover(std::string& title);
+    static void scrapingCover(std::string title);
 };
 
 

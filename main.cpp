@@ -7,7 +7,14 @@
 #include <string_view>
 #include <Mcat.h>
 #include <CommonsInit.h>
-#define MCAT_VERSION "version 0.1.0"
+#include <csignal>
+#define MCAT_VERSION "version 0.1.1"
+
+std::atomic<bool> g_shouldExit = false;
+
+void signalHandler(int) {
+    g_shouldExit.store(true, std::memory_order_relaxed);
+}
 
 void help();
 
@@ -123,6 +130,10 @@ void helpJa() {
 
 
 int main(const int argc, char *argv[]) {
+
+    std::signal(SIGINT, signalHandler); // Ctrl + C
+    std::signal(SIGTERM, signalHandler); // kill
+    // std::signal(SIGHUP, signalHandler);
 
     if (argc < 2) {
         // help();

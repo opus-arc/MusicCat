@@ -158,9 +158,20 @@ void MyFfmpeg::flacConvertedToM4aByFilename(const std::string &title) {
             << shellQuote(m4aPath.string());
 
     Cmd::runCmdCapture(cmd.str());
+
+    testLog("flacConvertedToM4aByFilename: 开始转换音频格式");
+    testLog("flacConvertedToM4aByFilename: 线程: " + title);
+    testLog("flacConvertedToM4aByFilename: flacPath: " + flacPath.string());
+    testLog("flacConvertedToM4aByFilename: m4aPath: " + m4aPath.string());
+
+    // std::cout << "转换 flac 为 m4a： " << std::endl;
+    // std::cout << "flacPath: " << flacPath.string() << "  m4aPath: " << m4aPath.string() << std::endl;
 }
 
 void MyFfmpeg::applyMetadataToM4aByFilename(const std::string &title, AppleMusicMetadata meta) {
+    testLog("applyMetadataToM4aByFilename: 开始给 m4a 添加元数据");
+    testLog("applyMetadataToM4aByFilename: 线程: " + title);
+
     const std::filesystem::path m4aPath = Entity::getOutputFolderPath() / (title + ".m4a");
     const std::filesystem::path tempPath = Entity::getOutputFolderPath() / (title + ".metadata.tmp.m4a");
 
@@ -236,9 +247,17 @@ void MyFfmpeg::applyMetadataToM4aByFilename(const std::string &title, AppleMusic
     Cmd::runCmdCapture(cmd.str());
 
     std::filesystem::rename(tempPath, m4aPath);
+
+    testLog("applyMetadataToM4aByFilename: m4aPath: " + m4aPath.string());
+
+    // std::cout << "给 m4a 添加 meta ： " << std::endl;
+    // std::cout << "temPath: " << tempPath << "   m4aPath: " << m4aPath << std::endl;
 }
 
 void MyFfmpeg::applyMetadataToFlacByFilename(const std::string &title, AppleMusicMetadata meta) {
+    testLog("applyMetadataToFlacByFilename: 开始为 flac 添加元数据");
+    testLog("applyMetadataToFlacByFilename: 线程: " + title);
+
     const std::filesystem::path flacPath = Entity::getOutputFolderPath() / (title + ".flac");
     const std::filesystem::path tempPath = Entity::getOutputFolderPath() / (title + ".metadata.tmp.flac");
 
@@ -322,6 +341,12 @@ void MyFfmpeg::applyMetadataToFlacByFilename(const std::string &title, AppleMusi
     Cmd::runCmdCapture(cmd.str());
 
     std::filesystem::rename(tempPath, flacPath);
+
+    testLog("applyMetadataToFlacByFilename: flacPath: " + flacPath.string());
+
+    // std::cout << "给 flac 添加 meta ： " << std::endl;
+    // std::cout << "temPath: " << tempPath << "   flacPath: " << flacPath << std::endl;
+
 }
 
 int MyFfmpeg::getFlacDurationSecondsByFilename(const std::string &title) {
@@ -362,6 +387,9 @@ int MyFfmpeg::getFlacBitDepthByFilename(const std::string &title) {
 }
 
 void MyFfmpeg::applyCover(const std::string &title) {
+    testLog("applyCover: 开始为 m4a 添加封面");
+    testLog("applyCover: 线程: " + title);
+
     const std::filesystem::path opf = Entity::getOutputFolderPath();
     const std::filesystem::path m4aPath = opf / (title + ".m4a");
     const std::filesystem::path coverPath = opf / (title + ".jpg");
@@ -397,11 +425,18 @@ void MyFfmpeg::applyCover(const std::string &title) {
 
     Cmd::runCmdCapture(cmd.str());
 
+    testLog("applyCover: m4aPath: " + m4aPath.string());
+
     std::filesystem::rename(tempPath, m4aPath);
     // Logger::info(std::string("[MyFfmpeg]: Attached front cover artwork to ") + m4aPath.string());
 }
 
-void MyFfmpeg::organizeAlbums() {
+void MyFfmpeg::organizeAlbums(const std::string &title) {
+    testLog("organizeAlbums: 开始整理指定的文件");
+    testLog("organizeAlbums: 线程" + title);
+
+    // std::cout << "开始整理指定文件: " << title << std::endl;
+
     const std::filesystem::path opf = Entity::getOutputFolderPath();
     const std::filesystem::path libraryRoot = opf / "Mcat Library";
 
@@ -413,45 +448,51 @@ void MyFfmpeg::organizeAlbums() {
         std::filesystem::create_directory(libraryRoot);
     }
 
-    for (const auto &entry: std::filesystem::directory_iterator(opf)) {
-        if (!entry.is_regular_file()) {
-            continue;
-        }
+    // 构造目标文件路径
+    const std::filesystem::path m4aPath = opf / (title + ".m4a");
+    const std::filesystem::path flacPath = opf / (title + ".flac");
 
-        const std::filesystem::path m4aPath = entry.path();
-        if (m4aPath.extension() != ".m4a") {
-            continue;
-        }
-
-        const std::string rawAlbumName = getM4aAlbumName(m4aPath);
-        const std::string albumFolderName = sanitizeFolderName(rawAlbumName);
-        const std::filesystem::path albumFolderPath = libraryRoot / albumFolderName;
-        const bool albumFolderAlreadyExists = std::filesystem::exists(albumFolderPath);
-
-        if (!albumFolderAlreadyExists) {
-            std::filesystem::create_directory(albumFolderPath);
-        }
-
-        if (!albumFolderAlreadyExists) {
-            const std::filesystem::path folderCoverPath = albumFolderPath / "Cover.jpg";
-            if (extractCoverFromM4a(m4aPath, folderCoverPath)) {
-                applyMacFolderIcon(albumFolderPath, folderCoverPath);
-            }
-            // std::filesystem::remove(folderCoverPath);
-        }
-
-        const std::filesystem::path destinationPath = makeUniqueDestination(albumFolderPath / m4aPath.filename());
-        std::filesystem::rename(m4aPath, destinationPath);
-
-        const std::filesystem::path flacPath = opf / (m4aPath.stem().string() + ".flac");
-        if (std::filesystem::exists(flacPath) && std::filesystem::is_regular_file(flacPath)) {
-            const std::filesystem::path flacFolderPath = albumFolderPath / "flac";
-            if (!std::filesystem::exists(flacFolderPath)) {
-                std::filesystem::create_directory(flacFolderPath);
-            }
-
-            const std::filesystem::path flacDestinationPath = makeUniqueDestination(flacFolderPath / flacPath.filename());
-            std::filesystem::rename(flacPath, flacDestinationPath);
-        }
+    // 如果 m4a 不存在，直接退出（核心文件）
+    if (!std::filesystem::exists(m4aPath) || !std::filesystem::is_regular_file(m4aPath)) {
+        throw std::runtime_error("m4a file not found: " + m4aPath.string());
     }
+
+    // ===== 读取专辑信息 =====
+    const std::string rawAlbumName = getM4aAlbumName(m4aPath);
+    const std::string albumFolderName = sanitizeFolderName(rawAlbumName);
+    const std::filesystem::path albumFolderPath = libraryRoot / albumFolderName;
+
+    const bool albumFolderAlreadyExists = std::filesystem::exists(albumFolderPath);
+
+    if (!albumFolderAlreadyExists) {
+        std::filesystem::create_directory(albumFolderPath);
+
+        // 仅首次创建时提取封面
+        const std::filesystem::path folderCoverPath = albumFolderPath / "Cover.jpg";
+        if (extractCoverFromM4a(m4aPath, folderCoverPath)) {
+            applyMacFolderIcon(albumFolderPath, folderCoverPath);
+        }
+        // std::filesystem::remove(folderCoverPath);
+    }
+
+    // ===== 移动 m4a =====
+    const std::filesystem::path m4aDestinationPath =
+        makeUniqueDestination(albumFolderPath / m4aPath.filename());
+    std::filesystem::rename(m4aPath, m4aDestinationPath);
+
+    // ===== 处理 flac（如果存在）=====
+    if (std::filesystem::exists(flacPath) && std::filesystem::is_regular_file(flacPath)) {
+
+        const std::filesystem::path flacFolderPath = albumFolderPath / "flac";
+
+        if (!std::filesystem::exists(flacFolderPath)) {
+            std::filesystem::create_directory(flacFolderPath);
+        }
+
+        const std::filesystem::path flacDestinationPath =
+            makeUniqueDestination(flacFolderPath / flacPath.filename());
+
+        std::filesystem::rename(flacPath, flacDestinationPath);
+    }
+    testLog("！！！！！线程:" + title + "已经处理完毕！！！");
 }

@@ -25,7 +25,7 @@ public:
 
     static int getFlacBitDepthByFilename(const std::string &title);
 
-    static void organizeAlbums();
+    static void organizeAlbums(const std::string &title);
 
 };
 

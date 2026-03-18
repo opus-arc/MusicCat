@@ -52,14 +52,20 @@ void Listener::stop() {
 
 void Listener::on() {
     enabled_.store(true, std::memory_order_relaxed);
+    isRunning_ = true;
 }
 
 void Listener::off() {
     enabled_.store(false, std::memory_order_relaxed);
+    isRunning_ = false;
 }
 
-void Listener::run() const {
-    bool last_trigger_state = false;
+bool Listener::status() const {
+    return isRunning_;
+}
+
+void Listener::run() {
+
     bool firstRun = true;
 
     while (!stop_requested_.load(std::memory_order_relaxed)) {
@@ -70,7 +76,16 @@ void Listener::run() const {
             continue;
         }
 
-        const bool current_trigger_state = trigger_();
+        bool current_trigger_state = trigger_();
+        if (trueSignal_) {
+            trueSignal_ = false;
+            current_trigger_state = true;
+        }
+        if (falseSignal_) {
+            falseSignal_ = false;
+            current_trigger_state = false;
+        }
+
 
         if (current_trigger_state && !last_trigger_state) {
             callback_true();
@@ -85,3 +100,23 @@ void Listener::run() const {
         last_trigger_state = current_trigger_state;
     }
 }
+
+
+void Listener::setLastTrigger_true() {
+    last_trigger_state = true;
+}
+
+void Listener::setLastTrigger_false() {
+    last_trigger_state = false;
+}
+
+void Listener::sendTrueSignal() {
+    trueSignal_ = true;
+}
+
+void Listener::sendFalseSignal() {
+    falseSignal_ = true;
+}
+
+
+

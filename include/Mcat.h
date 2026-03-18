@@ -4,7 +4,6 @@
 
 #ifndef MUSICCAT_MCAT_H
 #define MUSICCAT_MCAT_H
-#include <iostream>
 #include <string>
 
 #include "Listener.h"
@@ -31,19 +30,27 @@
  */
 class Mcat {
 public:
+    static std::queue<AppleMusicMetadata> tasks;
+
     static Listener l_isRunning;
     static Listener l_isPlaying;
     static Listener l_isChanged;
+    static Listener l_isPlayingPrue;
 
     static bool isRecording;
-    static std::optional<AppleMusicMetadata> currMeta;
-    static AppleMusicMetadata recordingMeta;
 
-    static bool action_1();
+    // static std::optional<AppleMusicMetadata> currMeta;
+    // static AppleMusicMetadata recordingMeta;
+
+    static AppleMusicMetadata action_1();
 
     static void action_2();
 
-    static void action_3();
+    static void action_3(const AppleMusicMetadata &metadata);
+
+    static void action_4(const AppleMusicMetadata &metadata);
+
+    static bool action_5(const AppleMusicMetadata& metadata);
 
 
     /**
@@ -92,6 +99,7 @@ public:
      * 打印 log
      */
     static void printLog();
+
 };
 
 

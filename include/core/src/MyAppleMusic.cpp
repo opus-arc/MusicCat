@@ -229,6 +229,13 @@ namespace {
     }
 }
 
+bool MyAppleMusic::isRestart = true;
+double MyAppleMusic::lastTime = -1.0;
+std::chrono::time_point<std::chrono::steady_clock> MyAppleMusic::lastCheck = std::chrono::steady_clock::now();
+std::string MyAppleMusic::lastTrackId = "no initializer";
+std::string MyAppleMusic::_lastTrackId = "no initializer";
+
+
 bool MyAppleMusic::isRunning() {
     try {
         const std::string cmd =
@@ -294,6 +301,74 @@ std::string MyAppleMusic::currentTrackId() {
     }
 }
 
+double MyAppleMusic::getCurrentPlaybackTime() {
+    try {
+        const std::string cmd =
+            "osascript "
+            "-e 'tell application \"Music\"' "
+            "-e 'return player position' "
+            "-e 'end tell'";
+
+        std::string output = trimTrailingNewlines(Cmd::runCmdCapture(cmd));
+
+        if (output.empty()) {
+            return 0.0;
+        }
+
+        return std::stod(output);
+    } catch (...) {
+        return 0.0;
+    }
+}
+
+bool MyAppleMusic::isPlayingPrue() {
+    const AppleMusicMetadata& recordingMeta = Mcat::tasks.back();
+
+    if (!recordingMeta.durationSeconds.has_value())
+        Logger::error("未正确获取 meta");
+
+    // 首次调用初始化
+    if (isRestart) {
+        // Logger::warn("重置纯净监听器");
+        lastTime = getCurrentPlaybackTime();
+        lastCheck = std::chrono::steady_clock::now();
+        lastTrackId = recordingMeta.title +
+            std::to_string(recordingMeta.durationSeconds.value());
+        isRestart = false;
+        return false;
+    }
+
+    // 获取此刻的数据
+    const double currentTime = getCurrentPlaybackTime();
+    const std::chrono::time_point<std::chrono::steady_clock> currCheck = std::chrono::steady_clock::now();
+    std::string currentTrackId = recordingMeta.title +
+            std::to_string(recordingMeta.durationSeconds.value());
+
+    // 计算 播放时间差 与 函数调用间隔 （这个受到 isRestart 的约束故合理）
+    const double deltaTime = currentTime - lastTime;
+    const double deltaWall = std::chrono::duration<double>(currCheck - lastCheck).count();
+
+    lastTime = currentTime;
+    lastCheck = currCheck;
+    lastTrackId = currentTrackId;
+
+    // 如果没有明显移动则明显还在缓存
+    // 在不管 ivl 的情况下，如果这一次的播放间隔小于调用这个函数的间隔，则说明存在卡顿
+    // Logger::info(" deltaWall=" + std::to_string(deltaWall) + " deltaTime=" + std::to_string(deltaTime));
+    // Logger::info(" deltaTime-deltaWall=" + std::to_string(std::abs(deltaTime - deltaWall)));
+    // Logger::info(" currentTrackId=" + currentTrackId);
+    // std::cout << std::endl;
+
+    // 经测试， 这个 epsilon 大概在 0.001 到 0.00106 之间
+    if (deltaTime < 0.03 || std::abs(deltaTime - deltaWall) > 0.05)
+        // 判断是不是同一个作品
+        if (lastTrackId == currentTrackId)
+            return false;
+
+
+    return true;
+}
+
 bool MyAppleMusic::isCurrentTrackNearBeginning(const int toleranceMs) {
     if (toleranceMs <= 0) {
         Logger::warn(std::string("[MyAppleMusic]: Invalid toleranceMs=") + std::to_string(toleranceMs) + ", fallback to 1000ms.");
@@ -334,12 +409,14 @@ bool MyAppleMusic::isCurrentTrackNearBeginning(const int toleranceMs) {
 }
 
 bool MyAppleMusic::isNextTrack() {
-    static std::string lastTrackId;
+
+
     // std::cout << "!!!!!!    " << lastTrackId << std::endl;
 
     if (!isPlaying()) {
         return false;
     }
+
 
     const std::string currentId = currentTrackId();
     if (currentId.empty()) {
@@ -347,14 +424,14 @@ bool MyAppleMusic::isNextTrack() {
     }
 
     // 第一次记录当前曲目
-    if (lastTrackId.empty()) {
-        lastTrackId = currentId;
+    if (_lastTrackId.empty()) {
+        _lastTrackId = currentId;
         return false;
     }
 
     // 检测是否切歌
-    if (currentId != lastTrackId) {
-        lastTrackId = currentId;
+    if (currentId != _lastTrackId) {
+        _lastTrackId = currentId;
         return true;
     }
 
@@ -569,32 +646,36 @@ void MyAppleMusic::printAppleMusicMetadata(const AppleMusicMetadata& metadata) {
 
     std::cout << std::endl;
                                         std::cout << "               title: " << metadata.title_o << '\n';
-                                        std::cout << "              artist: " << metadata.artist << '\n';
-                                        std::cout << "               album: " << metadata.album << '\n';
+      //                                   std::cout << "              artist: " << metadata.artist << '\n';
+      //                                   std::cout << "               album: " << metadata.album << '\n';
+      //
+      // AppleMusicMetadata::printOptionalField("        album artist", metadata.albumArtist);
+      // AppleMusicMetadata::printOptionalField("            composer", metadata.composer);
+      // AppleMusicMetadata::printOptionalField("               genre", metadata.genre);
+      // AppleMusicMetadata::printOptionalField("              lyrics", metadata.lyrics);
+      //
+      // AppleMusicMetadata::printOptionalField("     durationSeconds", metadata.durationSeconds);
+      // AppleMusicMetadata::printOptionalField("                year", metadata.year);
+      // AppleMusicMetadata::printOptionalField("         trackNumber", metadata.trackNumber);
+      // AppleMusicMetadata::printOptionalField("          trackCount", metadata.trackCount);
+      // AppleMusicMetadata::printOptionalField("          discNumber", metadata.discNumber);
+      // AppleMusicMetadata::printOptionalField("           discCount", metadata.discCount);
 
-      AppleMusicMetadata::printOptionalField("        album artist", metadata.albumArtist);
-      AppleMusicMetadata::printOptionalField("            composer", metadata.composer);
-      AppleMusicMetadata::printOptionalField("               genre", metadata.genre);
-      AppleMusicMetadata::printOptionalField("              lyrics", metadata.lyrics);
+      // AppleMusicMetadata::printOptionalField("             bitRate", metadata.bitRate); 1
+      // AppleMusicMetadata::printOptionalField("          sampleRate", metadata.sampleRate); 1
+      // AppleMusicMetadata::printOptionalField("                 bpm", metadata.bpm); 1
+      // AppleMusicMetadata::printOptionalField("           playCount", metadata.playCount); 1
+      // AppleMusicMetadata::printOptionalField("              rating", metadata.rating); 1
 
-      AppleMusicMetadata::printOptionalField("     durationSeconds", metadata.durationSeconds);
-      AppleMusicMetadata::printOptionalField("                year", metadata.year);
-      AppleMusicMetadata::printOptionalField("         trackNumber", metadata.trackNumber);
-      AppleMusicMetadata::printOptionalField("          trackCount", metadata.trackCount);
-      AppleMusicMetadata::printOptionalField("          discNumber", metadata.discNumber);
-      AppleMusicMetadata::printOptionalField("           discCount", metadata.discCount);
-      // AppleMusicMetadata::printOptionalField("             bitRate", metadata.bitRate);
-      // AppleMusicMetadata::printOptionalField("          sampleRate", metadata.sampleRate);
-      // AppleMusicMetadata::printOptionalField("                 bpm", metadata.bpm);
-      // AppleMusicMetadata::printOptionalField("           playCount", metadata.playCount);
-      // AppleMusicMetadata::printOptionalField("              rating", metadata.rating);
-
-      AppleMusicMetadata::printOptionalField("         artworkPath", metadata.artworkPath);
+      // AppleMusicMetadata::printOptionalField("         artworkPath", metadata.artworkPath);
 
     std::cout << std::endl;
 }
 
-void MyAppleMusic::scrapingCover(std::string& title) {
+void MyAppleMusic::scrapingCover(std::string title) {
+    testLog("scrapingCover: 抓取封面");
+    testLog("scrapingCover: 线程: " + title);
+
     try {
         std::filesystem::path opf = Entity::getOutputFolderPath();
         std::error_code ec;
@@ -683,6 +764,8 @@ void MyAppleMusic::scrapingCover(std::string& title) {
             }
             std::filesystem::remove(exportedFile, ec);
         }
+
+        testLog("scrapingCover: 抓取的封面: " + baseName + extension);
 
         // Logger::info(std::string("[MyAppleMusic]: Cover exported to ") + finalPath.string());
         // Logger::info("[MyAppleMusic]: This saves the highest-quality artwork currently exposed by the local Music app for the playing track.");
