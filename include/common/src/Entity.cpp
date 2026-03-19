@@ -13,6 +13,7 @@ void Entity::init() {
 }
 
 std::filesystem::path Entity::getOutputFolderPath() {
+
     return FileManager::txt_kvPair_reader(Path::getCacheTxtPath(), "currOutputFolderPath");
 }
 

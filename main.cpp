@@ -8,7 +8,7 @@
 #include <Mcat.h>
 #include <CommonsInit.h>
 #include <csignal>
-#define MCAT_VERSION "version 0.1.2"
+#define MCAT_VERSION "0.1.2"
 
 std::atomic<bool> g_shouldExit = false;
 
@@ -19,7 +19,7 @@ void signalHandler(int) {
 void help();
 
 namespace {
-    constexpr std::string_view kAppName = "MusicCat";
+    constexpr std::string_view kAppName = "mcat";
 
 
     void printUnknownCommand(const std::string_view command) {
@@ -42,19 +42,19 @@ namespace {
     void outputCommand(const int argc, char *argv[]) {
         CommonsInit::TestAllCommons(false);
         if (argc < 3) {
-            std::cerr << "Mcat: Usage: -o <outputPath>\n";
+            std::cerr << "mcat: usage: mcat -o <outputPath>\n";
             return;
         }
-        Mcat::setVirtualDevice(argv[2]);
+        Mcat::setOutput(argv[2]);
     }
 
     void virtualDeviceCommand(const int argc, char *argv[]) {
         CommonsInit::TestAllCommons(false);
         if (argc < 3) {
-            std::cerr << "Mcat: Usage: -vd <available virtual device>\n";
+            std::cerr << "mcat: usage: mcat -vd <available virtual device>\n";
             return;
         }
-        Mcat::setOutput(argv[2]);
+        Mcat::setVirtualDevice(argv[2]);
     }
 
     void versionCommand() {
@@ -75,7 +75,7 @@ void help() {
     std::cout << "MusicCat - Apple Music recording CLI\n\n";
 
     std::cout << "Usage:\n";
-    std::cout << "  MusicCat <command> [options]\n\n";
+    std::cout << "  mcat <command> [options]\n\n";
 
     std::cout << "Commands:\n";
     std::cout << "  ready                Start the Apple Music recording listener\n";
@@ -87,14 +87,15 @@ void help() {
     std::cout << "Options:\n";
     std::cout << "  -o <path>            Set output directory\n";
     std::cout << "  -vd <device>         Set virtual audio device\n";
-    std::cout << "  -v, -version         Show program version\n";
+    std::cout << "  -h, --help           Show help message\n";
+    std::cout << "  -v, --version        Show program version\n";
 }
 
 void helpZh() {
     std::cout << "MusicCat - Apple Music 自动录音工具\n\n";
 
     std::cout << "用法:\n";
-    std::cout << "  MusicCat <命令> [参数]\n\n";
+    std::cout << "  mcat <命令> [参数]\n\n";
 
     std::cout << "命令:\n";
     std::cout << "  ready                启动 Apple Music 监听并自动录音\n";
@@ -106,14 +107,15 @@ void helpZh() {
     std::cout << "参数:\n";
     std::cout << "  -o <路径>            设置输出目录\n";
     std::cout << "  -vd <设备名>         设置虚拟音频设备\n";
-    std::cout << "  -v, -version         显示版本号\n";
+    std::cout << "  -h, --help           显示帮助信息\n";
+    std::cout << "  -v, --version        显示版本号\n";
 }
 
 void helpJa() {
     std::cout << "MusicCat - Apple Music 自動録音ツール\n\n";
 
     std::cout << "使い方:\n";
-    std::cout << "  MusicCat <コマンド> [オプション]\n\n";
+    std::cout << "  mcat <コマンド> [オプション]\n\n";
 
     std::cout << "コマンド:\n";
     std::cout << "  ready                Apple Music を監視して自動録音を開始\n";
@@ -125,7 +127,8 @@ void helpJa() {
     std::cout << "オプション:\n";
     std::cout << "  -o <path>            出力ディレクトリを設定\n";
     std::cout << "  -vd <device>         仮想オーディオデバイスを設定\n";
-    std::cout << "  -v, -version         バージョンを表示\n";
+    std::cout << "  -h, --help           ヘルプを表示\n";
+    std::cout << "  -v, --version        バージョンを表示\n";
 }
 
 
@@ -136,7 +139,7 @@ int main(const int argc, char *argv[]) {
     // std::signal(SIGHUP, signalHandler);
 
     if (argc < 2) {
-        // help();
+        help();
         return 0;
     }
 
@@ -175,7 +178,7 @@ int main(const int argc, char *argv[]) {
         return 0;
     }
 
-    if (cmd == "-ver" || cmd == "-version" || cmd == "-v") {
+    if (cmd == "-ver" || cmd == "-version" || cmd == "--version" || cmd == "-v") {
         versionCommand();
         return 0;
     }
@@ -188,4 +191,3 @@ int main(const int argc, char *argv[]) {
     printUnknownCommand(cmd);
     return 1;
 }
-

@@ -318,6 +318,4 @@ Recording lifecycle:
 
 # License
 
-MIT License
-
-```
+Apache-2.0

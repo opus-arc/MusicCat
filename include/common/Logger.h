@@ -37,6 +37,7 @@ private:
 
 inline bool isTesting = false;
 
+
 inline void testLog(const std::string &message) {
     if (isTesting)
         Logger::debug(message);

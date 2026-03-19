@@ -55,3 +55,8 @@ target_include_directories(
 )
 
 target_link_libraries(MusicCat PRIVATE spdlog::spdlog)
+
+
+set_target_properties(MusicCat PROPERTIES
+        OUTPUT_NAME "mcat"
+)

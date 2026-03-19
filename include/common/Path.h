@@ -9,8 +9,11 @@
 #include <iostream>
 
 class Path {
+    static bool isTestingInClion;
 public:
     static std::filesystem::path getProjectPath();
+
+    static std::filesystem::path getHomePath();
 
     static std::filesystem::path getDefaultOutputPath();
 
@@ -18,9 +21,9 @@ public:
 
     static std::filesystem::path getCacheTxtPath();
 
-    static std::filesystem::path getDataPath();
-
     static std::filesystem::path getLogPath();
+
+    static std::filesystem::path getLogFilePath();
 
     static std::filesystem::path getLogoPath();
 };
