@@ -494,5 +494,5 @@ void MyFfmpeg::organizeAlbums(const std::string &title) {
 
         std::filesystem::rename(flacPath, flacDestinationPath);
     }
-    testLog("！！！！！线程:" + title + "已经处理完毕！！！");
+
 }

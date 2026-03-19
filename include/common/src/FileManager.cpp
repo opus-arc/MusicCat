@@ -38,6 +38,13 @@ void FileManager::deleteFlacByName(const std::string& flacName) {
         std::filesystem::remove(flacPath);
 }
 
+bool FileManager::isFlacExist(const std::string &flacName) {
+    const std::string _flacName = flacName + ".flac";
+    const std::filesystem::path flacPath = Entity::getOutputFolderPath() / _flacName;
+
+    return std::filesystem::exists(flacPath);
+}
+
 std::string FileManager::txt_kvPair_reader(const std::string &path, const std::string &k) {
     ensure_path(path);
 

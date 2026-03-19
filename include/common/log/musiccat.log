@@ -3154,3 +3154,761 @@ artwork path: /private/var/folders/zh/nj8dx9w152qdp4y5nkg5xm540000gn/T/Temporary
 [2026-03-18 20:50:04] [info] The music seems to have been paused.
 [2026-03-18 20:50:05] [info] A piece of music was played.
 [2026-03-18 20:50:08] [info] The music seems to have been paused.
+[2026-03-19 10:06:29] [info] Last time used: 2026-03-18 20:50:08
+[2026-03-19 10:06:31] [info] Apple Music is running.
+[2026-03-19 10:06:31] [info] But no music has been played yet.
+[2026-03-19 10:06:57] [info] A piece of music was played.
+[2026-03-19 10:06:57] [debug] 开始执行 action_1
+[2026-03-19 10:07:00] [debug] action_3: 开始执行
+[2026-03-19 10:07:00] [debug] action_3: 线程: 4 Impromptus, D. 899 - No. 1 in C Minor. Allegro molto moderato
+[2026-03-19 10:07:00] [debug] recording: 开始录音
+[2026-03-19 10:07:00] [debug] recording: 线程4 Impromptus, D. 899 - No. 1 in C Minor. Allegro molto moderato
+[2026-03-19 10:07:00] [debug] recording: 进程14139
+[2026-03-19 10:07:00] [debug] scrapingCover: 抓取封面
+[2026-03-19 10:07:00] [debug] scrapingCover: 线程: 4 Impromptus, D. 899 - No. 1 in C Minor. Allegro molto moderato
+[2026-03-19 10:07:00] [debug] scrapingCover: 抓取的封面: 4 Impromptus, D. 899 - No. 1 in C Minor. Allegro molto moderato.jpg
+[2026-03-19 10:07:17] [info] The music seems to have been paused.
+[2026-03-19 10:07:17] [debug] 开始执行 action_2
+[2026-03-19 10:07:17] [debug] recording: 停止录音
+[2026-03-19 10:07:17] [debug] recording: 进程: 14139
+[2026-03-19 10:07:17] [debug] action_4: 开始执行
+[2026-03-19 10:07:17] [debug] action_4: 线程: 4 Impromptus, D. 899 - No. 1 in C Minor. Allegro molto moderato
+[2026-03-19 10:07:17] [debug] action_5: 开始执行
+[2026-03-19 10:07:17] [debug] action_5: 线程: 4 Impromptus, D. 899 - No. 1 in C Minor. Allegro molto moderato
+[2026-03-19 10:07:17] [debug] action_5: 返回 false, 检测到数据不纯净，录制并不完整
+[2026-03-19 10:07:17] [debug] deleteJpg: 开始删除指定的 jpg 文件
+[2026-03-19 10:07:17] [debug] deleteJpg: 线程: 4 Impromptus, D. 899 - No. 1 in C Minor. Allegro molto moderato
+[2026-03-19 10:07:17] [debug] deleteJpg: jpgPath: /Users/opusarc/CLionProjects/MusicCat/output/4 Impromptus, D. 899 - No. 1 in C Minor. Allegro molto moderato.jpg
+[2026-03-19 10:07:17] [debug] organizeAlbums: 开始整理指定的文件
+[2026-03-19 10:07:17] [debug] organizeAlbums: 线程4 Impromptus, D. 899 - No. 1 in C Minor. Allegro molto moderato
+[2026-03-19 10:08:05] [info] Last time used: 2026-03-19 10:07:17
+[2026-03-19 10:08:07] [info] Apple Music is running.
+[2026-03-19 10:08:07] [info] But no music has been played yet.
+[2026-03-19 10:08:11] [info] A piece of music was played.
+[2026-03-19 10:08:11] [debug] 开始执行 action_1
+[2026-03-19 10:08:12] [debug] action_3: 开始执行
+[2026-03-19 10:08:12] [debug] action_3: 线程: 4 Impromptus, D. 899 - No. 1 in C Minor. Allegro molto moderato
+[2026-03-19 10:08:12] [debug] recording: 开始录音
+[2026-03-19 10:08:12] [debug] recording: 线程4 Impromptus, D. 899 - No. 1 in C Minor. Allegro molto moderato
+[2026-03-19 10:08:12] [debug] recording: 进程14803
+[2026-03-19 10:08:12] [debug] scrapingCover: 抓取封面
+[2026-03-19 10:08:12] [debug] scrapingCover: 线程: 4 Impromptus, D. 899 - No. 1 in C Minor. Allegro molto moderato
+[2026-03-19 10:08:12] [debug] scrapingCover: 抓取的封面: 4 Impromptus, D. 899 - No. 1 in C Minor. Allegro molto moderato.jpg
+[2026-03-19 10:08:16] [info] The music seems to have been paused.
+[2026-03-19 10:08:16] [debug] 开始执行 action_2
+[2026-03-19 10:08:16] [debug] recording: 停止录音
+[2026-03-19 10:08:16] [debug] recording: 进程: 14803
+[2026-03-19 10:08:16] [debug] action_4: 开始执行
+[2026-03-19 10:08:16] [debug] action_4: 线程: 4 Impromptus, D. 899 - No. 1 in C Minor. Allegro molto moderato
+[2026-03-19 10:08:16] [debug] action_5: 开始执行
+[2026-03-19 10:08:16] [debug] action_5: 线程: 4 Impromptus, D. 899 - No. 1 in C Minor. Allegro molto moderato
+[2026-03-19 10:08:16] [debug] action_5: 返回 false, 检测到数据不纯净，录制并不完整
+[2026-03-19 10:08:16] [debug] deleteJpg: 开始删除指定的 jpg 文件
+[2026-03-19 10:08:16] [debug] deleteJpg: 线程: 4 Impromptus, D. 899 - No. 1 in C Minor. Allegro molto moderato
+[2026-03-19 10:08:16] [debug] deleteJpg: jpgPath: /Users/opusarc/CLionProjects/MusicCat/output/4 Impromptus, D. 899 - No. 1 in C Minor. Allegro molto moderato.jpg
+[2026-03-19 10:08:27] [info] A piece of music was played.
+[2026-03-19 10:08:27] [debug] 开始执行 action_1
+[2026-03-19 10:08:27] [debug] action_3: 开始执行
+[2026-03-19 10:08:27] [debug] action_3: 线程: 4 Impromptus, D. 899 - No. 2 in E-Flat Major. Allegro
+[2026-03-19 10:08:27] [debug] recording: 开始录音
+[2026-03-19 10:08:27] [debug] recording: 线程4 Impromptus, D. 899 - No. 2 in E-Flat Major. Allegro
+[2026-03-19 10:08:27] [debug] recording: 进程15087
+[2026-03-19 10:08:28] [debug] scrapingCover: 抓取封面
+[2026-03-19 10:08:28] [debug] scrapingCover: 线程: 4 Impromptus, D. 899 - No. 2 in E-Flat Major. Allegro
+[2026-03-19 10:08:28] [debug] scrapingCover: 抓取的封面: 4 Impromptus, D. 899 - No. 2 in E-Flat Major. Allegro.jpg
+[2026-03-19 10:08:37] [debug] !!!!!!!!!!!!!      Track switching detected.
+[2026-03-19 10:08:37] [info] The music seems to have been paused.
+[2026-03-19 10:08:37] [debug] 开始执行 action_2
+[2026-03-19 10:08:37] [debug] recording: 停止录音
+[2026-03-19 10:08:37] [debug] recording: 进程: 15087
+[2026-03-19 10:08:37] [debug] action_4: 开始执行
+[2026-03-19 10:08:37] [debug] action_4: 线程: 4 Impromptus, D. 899 - No. 2 in E-Flat Major. Allegro
+[2026-03-19 10:08:37] [debug] action_5: 开始执行
+[2026-03-19 10:08:37] [debug] action_5: 线程: 4 Impromptus, D. 899 - No. 2 in E-Flat Major. Allegro
+[2026-03-19 10:08:37] [debug] action_5: 返回 false, 检测到数据不纯净，录制并不完整
+[2026-03-19 10:08:37] [debug] deleteJpg: 开始删除指定的 jpg 文件
+[2026-03-19 10:08:37] [debug] deleteJpg: 线程: 4 Impromptus, D. 899 - No. 2 in E-Flat Major. Allegro
+[2026-03-19 10:08:37] [debug] deleteJpg: jpgPath: /Users/opusarc/CLionProjects/MusicCat/output/4 Impromptus, D. 899 - No. 2 in E-Flat Major. Allegro.jpg
+[2026-03-19 10:08:37] [info] A piece of music was played.
+[2026-03-19 10:08:37] [debug] 开始执行 action_1
+[2026-03-19 10:08:39] [debug] action_3: 开始执行
+[2026-03-19 10:08:39] [debug] action_3: 线程: 4 Impromptus, D. 899 - No. 3 in G-Flat Major. Andante
+[2026-03-19 10:08:39] [debug] recording: 开始录音
+[2026-03-19 10:08:39] [debug] recording: 线程4 Impromptus, D. 899 - No. 3 in G-Flat Major. Andante
+[2026-03-19 10:08:39] [debug] recording: 进程15429
+[2026-03-19 10:08:39] [debug] scrapingCover: 抓取封面
+[2026-03-19 10:08:39] [debug] scrapingCover: 线程: 4 Impromptus, D. 899 - No. 3 in G-Flat Major. Andante
+[2026-03-19 10:08:39] [debug] scrapingCover: 抓取的封面: 4 Impromptus, D. 899 - No. 3 in G-Flat Major. Andante.jpg
+[2026-03-19 10:08:45] [debug] !!!!!!!!!!!!!      Track switching detected.
+[2026-03-19 10:08:45] [info] The music seems to have been paused.
+[2026-03-19 10:08:45] [debug] 开始执行 action_2
+[2026-03-19 10:08:45] [debug] recording: 停止录音
+[2026-03-19 10:08:45] [debug] recording: 进程: 15429
+[2026-03-19 10:08:45] [debug] action_4: 开始执行
+[2026-03-19 10:08:45] [debug] action_4: 线程: 4 Impromptus, D. 899 - No. 3 in G-Flat Major. Andante
+[2026-03-19 10:08:45] [debug] action_5: 开始执行
+[2026-03-19 10:08:45] [debug] action_5: 线程: 4 Impromptus, D. 899 - No. 3 in G-Flat Major. Andante
+[2026-03-19 10:08:45] [debug] action_5: 返回 false, 检测到数据不纯净，录制并不完整
+[2026-03-19 10:08:45] [debug] deleteJpg: 开始删除指定的 jpg 文件
+[2026-03-19 10:08:45] [debug] deleteJpg: 线程: 4 Impromptus, D. 899 - No. 3 in G-Flat Major. Andante
+[2026-03-19 10:08:45] [debug] deleteJpg: jpgPath: /Users/opusarc/CLionProjects/MusicCat/output/4 Impromptus, D. 899 - No. 3 in G-Flat Major. Andante.jpg
+[2026-03-19 10:08:46] [info] A piece of music was played.
+[2026-03-19 10:08:46] [debug] 开始执行 action_1
+[2026-03-19 10:08:47] [debug] action_3: 开始执行
+[2026-03-19 10:08:47] [debug] action_3: 线程: 4 Impromptus, D. 899 - No. 4 in A-Flat Major. Allegretto
+[2026-03-19 10:08:47] [debug] recording: 开始录音
+[2026-03-19 10:08:47] [debug] recording: 线程4 Impromptus, D. 899 - No. 4 in A-Flat Major. Allegretto
+[2026-03-19 10:08:47] [debug] recording: 进程15657
+[2026-03-19 10:08:47] [debug] scrapingCover: 抓取封面
+[2026-03-19 10:08:47] [debug] scrapingCover: 线程: 4 Impromptus, D. 899 - No. 4 in A-Flat Major. Allegretto
+[2026-03-19 10:08:47] [debug] scrapingCover: 抓取的封面: 4 Impromptus, D. 899 - No. 4 in A-Flat Major. Allegretto.jpg
+[2026-03-19 10:08:51] [debug] !!!!!!!!!!!!!      Track switching detected.
+[2026-03-19 10:08:51] [info] The music seems to have been paused.
+[2026-03-19 10:08:51] [debug] 开始执行 action_2
+[2026-03-19 10:08:51] [debug] recording: 停止录音
+[2026-03-19 10:08:51] [debug] recording: 进程: 15657
+[2026-03-19 10:08:51] [debug] action_4: 开始执行
+[2026-03-19 10:08:51] [debug] action_4: 线程: 4 Impromptus, D. 899 - No. 4 in A-Flat Major. Allegretto
+[2026-03-19 10:08:51] [debug] action_5: 开始执行
+[2026-03-19 10:08:51] [debug] action_5: 线程: 4 Impromptus, D. 899 - No. 4 in A-Flat Major. Allegretto
+[2026-03-19 10:08:51] [debug] action_5: 返回 false, 检测到数据不纯净，录制并不完整
+[2026-03-19 10:08:51] [debug] deleteJpg: 开始删除指定的 jpg 文件
+[2026-03-19 10:08:51] [debug] deleteJpg: 线程: 4 Impromptus, D. 899 - No. 4 in A-Flat Major. Allegretto
+[2026-03-19 10:08:51] [debug] deleteJpg: jpgPath: /Users/opusarc/CLionProjects/MusicCat/output/4 Impromptus, D. 899 - No. 4 in A-Flat Major. Allegretto.jpg
+[2026-03-19 10:08:52] [info] A piece of music was played.
+[2026-03-19 10:08:52] [debug] 开始执行 action_1
+[2026-03-19 10:08:53] [debug] action_3: 开始执行
+[2026-03-19 10:08:53] [debug] action_3: 线程: Piano Sonata in B-Flat Major, D. 960 - I. Molto moderato
+[2026-03-19 10:08:53] [debug] recording: 开始录音
+[2026-03-19 10:08:53] [debug] recording: 线程Piano Sonata in B-Flat Major, D. 960 - I. Molto moderato
+[2026-03-19 10:08:53] [debug] recording: 进程15829
+[2026-03-19 10:08:53] [debug] scrapingCover: 抓取封面
+[2026-03-19 10:08:53] [debug] scrapingCover: 线程: Piano Sonata in B-Flat Major, D. 960 - I. Molto moderato
+[2026-03-19 10:08:53] [debug] scrapingCover: 抓取的封面: Piano Sonata in B-Flat Major, D. 960 - I. Molto moderato.jpg
+[2026-03-19 [2026-03-19 10:09:12] [info] Welcome to MusicCat
+[2026-03-19 10:09:14] [info] Apple Music is running.
+[2026-03-19 10:09:14] [info] But no music has been played yet.
+[2026-03-19 10:09:21] [info] A piece of music was played.
+[2026-03-19 10:09:21] [debug] 开始执行 action_1
+[2026-03-19 10:09:22] [debug] action_3: 开始执行
+[2026-03-19 10:09:22] [debug] action_3: 线程: Piano Sonata in B-Flat Major, D. 960 - I. Molto moderato
+[2026-03-19 10:09:22] [debug] recording: 开始录音
+[2026-03-19 10:09:22] [debug] recording: 线程Piano Sonata in B-Flat Major, D. 960 - I. Molto moderato
+[2026-03-19 10:09:22] [debug] recording: 进程16229
+[2026-03-19 10:09:22] [debug] scrapingCover: 抓取封面
+[2026-03-19 10:09:22] [debug] scrapingCover: 线程: Piano Sonata in B-Flat Major, D. 960 - I. Molto moderato
+[2026-03-19 10:09:22] [debug] scrapingCover: 抓取的封面: Piano Sonata in B-Flat Major, D. 960 - I. Molto moderato.jpg
+[2026-03-19 10:09:27] [debug] 开始执行 action_2
+[2026-03-19 10:09:27] [debug] recording: 停止录音
+[2026-03-19 10:09:27] [debug] recording: 进程: 16229
+[2026-03-19 10:09:27] [info] The music seems to have been paused.
+[2026-03-19 10:09:27] [debug] 开始执行 action_2
+[2026-03-19 10:09:27] [debug] recording: 停止录音
+[2026-03-19 10:09:27] [debug] recording: 进程: 16229
+[2026-03-19 10:09:27] [error] 等待 sox 进程退出失败, errno=10
+[2026-03-19 10:09:27] [info] Recording has been stopped due to playback stuttering or other abnormal behavior. The recording will wait for the next recording window.
+[2026-03-19 10:09:27] [debug] action_4: 开始执行
+[2026-03-19 10:09:27] [debug] action_4: 线程: Piano Sonata in B-Flat Major, D. 960 - I. Molto moderato
+[2026-03-19 10:09:27] [debug] action_5: 开始执行
+[2026-03-19 10:09:27] [debug] action_5: 线程: Piano Sonata in B-Flat Major, D. 960 - I. Molto moderato
+[2026-03-19 10:09:27] [debug] applyMetadataToFlacByFilename: 开始为 flac 添加元数据
+[2026-03-19 10:09:27] [debug] applyMetadataToFlacByFilename: 线程: Piano Sonata in B-Flat Major, D. 960 - I. Molto moderato
+[2026-03-19 10:09:27] [debug] applyMetadataToFlacByFilename: flacPath: /Users/opusarc/CLionProjects/MusicCat/output/Piano Sonata in B-Flat Major, D. 960 - I. Molto moderato.flac
+[2026-03-19 10:09:27] [debug] flacConvertedToM4aByFilename: 开始转换音频格式
+[2026-03-19 10:09:27] [debug] flacConvertedToM4aByFilename: 线程: Piano Sonata in B-Flat Major, D. 960 - I. Molto moderato
+[2026-03-19 10:09:27] [debug] flacConvertedToM4aByFilename: flacPath: /Users/opusarc/CLionProjects/MusicCat/output/Piano Sonata in B-Flat Major, D. 960 - I. Molto moderato.flac
+[2026-03-19 10:09:27] [debug] flacConvertedToM4aByFilename: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/Piano Sonata in B-Flat Major, D. 960 - I. Molto moderato.m4a
+[2026-03-19 10:09:27] [debug] applyMetadataToM4aByFilename: 开始给 m4a 添加元数据
+[2026-03-19 10:09:27] [debug] applyMetadataToM4aByFilename: 线程: Piano Sonata in B-Flat Major, D. 960 - I. Molto moderato
+[2026-03-19 10:09:27] [debug] applyMetadataToM4aByFilename: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/Piano Sonata in B-Flat Major, D. 960 - I. Molto moderato.m4a
+[2026-03-19 10:09:27] [debug] applyCover: 开始为 m4a 添加封面
+[2026-03-19 10:09:27] [debug] applyCover: 线程: Piano Sonata in B-Flat Major, D. 960 - I. Molto moderato
+[2026-03-19 10:09:27] [debug] applyCover: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/Piano Sonata in B-Flat Major, D. 960 - I. Molto moderato.m4a
+[2026-03-19 10:09:27] [debug] organizeAlbums: 开始整理指定的文件
+[2026-03-19 10:09:27] [debug] organizeAlbums: 线程Piano Sonata in B-Flat Major, D. 960 - I. Molto moderato
+[2026-03-19 10:09:28] [debug] ！！！！！线程:Piano Sonata in B-Flat Major, D. 960 - I. Molto moderato已经处理完毕！！！
+[2026-03-19 10:09:28] [debug] deleteJpg: 开始删除指定的 jpg 文件
+[2026-03-19 10:09:28] [debug] deleteJpg: 线程: Piano Sonata in B-Flat Major, D. 960 - I. Molto moderato
+[2026-03-19 10:09:28] [debug] deleteJpg: jpgPath: /Users/opusarc/CLionProjects/MusicCat/output/Piano Sonata in B-Flat Major, D. 960 - I. Molto moderato.jpg
+[2026-03-19 10:09:31] [info] A piece of music was played.
+[2026-03-19 10:09:31] [debug] 开始执行 action_1
+[2026-03-19 10:09:31] [debug] action_3: 开始执行
+[2026-03-19 10:09:31] [debug] action_3: 线程: Piano Sonata in B-Flat Major, D. 960 - II. Andante sostenuto
+[2026-03-19 10:09:31] [debug] recording: 开始录音
+[2026-03-19 10:09:31] [debug] recording: 线程Piano Sonata in B-Flat Major, D. 960 - II. Andante sostenuto
+[2026-03-19 10:09:31] [debug] recording: 进程16483
+[2026-03-19 10:09:32] [debug] scrapingCover: 抓取封面
+[2026-03-19 10:09:32] [debug] scrapingCover: 线程: Piano Sonata in B-Flat Major, D. 960 - II. Andante sostenuto
+[2026-03-19 10:09:32] [debug] scrapingCover: 抓取的封面: Piano Sonata in B-Flat Major, D. 960 - II. Andante sostenuto.jpg
+[2026-03-19 10:09:39] [info] The music seems to have been paused.
+[2026-03-19 10:09:39] [debug] 开始执行 action_2
+[2026-03-19 10:09:39] [debug] recording: 停止录音
+[2026-03-19 10:09:39] [debug] recording: 进程: 16483
+[2026-03-19 10:09:39] [debug] action_4: 开始执行
+[2026-03-19 10:09:39] [debug] action_4: 线程: Piano Sonata in B-Flat Major, D. 960 - II. Andante sostenuto
+[2026-03-19 10:09:39] [debug] action_5: 开始执行
+[2026-03-19 10:09:39] [debug] action_5: 线程: Piano Sonata in B-Flat Major, D. 960 - II. Andante sostenuto
+[2026-03-19 10:09:39] [debug] applyMetadataToFlacByFilename: 开始为 flac 添加元数据
+[2026-03-19 10:09:39] [debug] applyMetadataToFlacByFilename: 线程: Piano Sonata in B-Flat Major, D. 960 - II. Andante sostenuto
+[2026-03-19 10:09:39] [debug] applyMetadataToFlacByFilename: flacPath: /Users/opusarc/CLionProjects/MusicCat/output/Piano Sonata in B-Flat Major, D. 960 - II. Andante sostenuto.flac
+[2026-03-19 10:09:39] [debug] flacConvertedToM4aByFilename: 开始转换音频格式
+[2026-03-19 10:09:39] [debug] flacConvertedToM4aByFilename: 线程: Piano Sonata in B-Flat Major, D. 960 - II. Andante sostenuto
+[2026-03-19 10:09:39] [debug] flacConvertedToM4aByFilename: flacPath: /Users/opusarc/CLionProjects/MusicCat/output/Piano Sonata in B-Flat Major, D. 960 - II. Andante sostenuto.flac
+[2026-03-19 10:09:39] [debug] flacConvertedToM4aByFilename: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/Piano Sonata in B-Flat Major, D. 960 - II. Andante sostenuto.m4a
+[2026-03-19 10:09:39] [debug] applyMetadataToM4aByFilename: 开始给 m4a 添加元数据
+[2026-03-19 10:09:39] [debug] applyMetadataToM4aByFilename: 线程: Piano Sonata in B-Flat Major, D. 960 - II. Andante sostenuto
+[2026-03-19 10:09:39] [debug] applyMetadataToM4aByFilename: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/Piano Sonata in B-Flat Major, D. 960 - II. Andante sostenuto.m4a
+[2026-03-19 10:09:39] [debug] applyCover: 开始为 m4a 添加封面
+[2026-03-19 10:09:39] [debug] applyCover: 线程: Piano Sonata in B-Flat Major, D. 960 - II. Andante sostenuto
+[2026-03-19 10:09:39] [debug] applyCover: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/Piano Sonata in B-Flat Major, D. 960 - II. Andante sostenuto.m4a
+[2026-03-19 10:09:39] [debug] organizeAlbums: 开始整理指定的文件
+[2026-03-19 10:09:39] [debug] organizeAlbums: 线程Piano Sonata in B-Flat Major, D. 960 - II. Andante sostenuto
+[2026-03-19 10:09:39] [debug] ！！！！！线程:Piano Sonata in B-Flat Major, D. 960 - II. Andante sostenuto已经处理完毕！！！
+[2026-03-19 10:09:39] [debug] deleteJpg: 开始删除指定的 jpg 文件
+[2026-03-19 10:09:39] [debug] deleteJpg: 线程: Piano Sonata in B-Flat Major, D. 960 - II. Andante sostenuto
+[2026-03-19 10:09:39] [debug] deleteJpg: jpgPath: /Users/opusarc/CLionProjects/MusicCat/output/Piano Sonata in B-Flat Major, D. 960 - II. Andante sostenuto.jpg
+[2026-03-19 10:09:42] [info] A piece of music was played.
+[2026-03-19 10:09:42] [debug] 开始执行 action_1
+[2026-03-19 10:09:43] [info] This track was not recorded as it was not played from the beginning.
+[2026-03-19 10:09:44] [debug] !!!!!!!!!!!!!      Track switching detected.
+[2026-03-19 10:09:45] [info] The music seems to have been paused.
+[2026-03-19 10:09:45] [info] A piece of music was played.
+[2026-03-19 10:09:45] [debug] 开始执行 action_1
+[2026-03-19 10:09:48] [debug] action_3: 开始执行
+[2026-03-19 10:09:48] [debug] action_3: 线程: Piano Sonata in B-Flat Major, D. 960 - III. Scherzo. Allegro vivace con delicatezza
+[2026-03-19 10:09:48] [debug] recording: 开始录音
+[2026-03-19 10:09:48] [debug] recording: 线程Piano Sonata in B-Flat Major, D. 960 - III. Scherzo. Allegro vivace con delicatezza
+[2026-03-19 10:09:48] [debug] recording: 进程16929
+[2026-03-19 10:09:48] [debug] scrapingCover: 抓取封面
+[2026-03-19 10:09:48] [debug] scrapingCover: 线程: Piano Sonata in B-Flat Major, D. 960 - III. Scherzo. Allegro vivace con delicatezza
+[2026-03-19 10:09:48] [debug] scrapingCover: 抓取的封面: Piano Sonata in B-Flat Major, D. 960 - III. Scherzo. Allegro vivace con delicatezza.jpg
+[2026-03-19 10:09:51] [debug] !!!!!!!!!!!!!      Track switching detected.
+[2026-03-19 10:09:51] [info] The music seems to have been paused.
+[2026-03-19 10:09:51] [debug] 开始执行 action_2
+[2026-03-19 10:09:51] [debug] recording: 停止录音
+[2026-03-19 10:09:51] [debug] recording: 进程: 16929
+[2026-03-19 10:09:51] [debug] action_4: 开始执行
+[2026-03-19 10:09:51] [debug] action_4: 线程: Piano Sonata in B-Flat Major, D. 960 - II. Andante sostenuto
+[2026-03-19 10:09:51] [debug] action_5: 开始执行
+[2026-03-19 10:09:51] [debug] action_5: 线程: Piano Sonata in B-Flat Major, D. 960 - II. Andante sostenuto
+[2026-03-19 10:09:51] [debug] applyMetadataToFlacByFilename: 开始为 flac 添加元数据
+[2026-03-19 10:09:51] [debug] applyMetadataToFlacByFilename: 线程: Piano Sonata in B-Flat Major, D. 960 - II. Andante sostenuto
+[2026-03-19 10:10:59] [info] Last time used: 2026-03-19 10:09:51
+[2026-03-19 10:11:00] [info] Apple Music is running.
+[2026-03-19 10:11:00] [info] But no music has been played yet.
+[2026-03-19 10:11:13] [info] A piece of music was played.
+[2026-03-19 10:11:13] [debug] 开始执行 action_1
+[2026-03-19 10:11:17] [debug] action_3: 开始执行
+[2026-03-19 10:11:17] [debug] action_3: 线程: 踊り子
+[2026-03-19 10:11:17] [debug] recording: 开始录音
+[2026-03-19 10:11:17] [debug] recording: 线程踊り子
+[2026-03-19 10:11:17] [debug] recording: 进程17384
+[2026-03-19 10:11:17] [debug] scrapingCover: 抓取封面
+[2026-03-19 10:11:17] [debug] scrapingCover: 线程: 踊り子
+[2026-03-19 10:11:18] [debug] scrapingCover: 抓取的封面: 踊り子.jpg
+[2026-03-19 10:12:22] [info] The music seems to have been paused.
+[2026-03-19 10:12:22] [debug] 开始执行 action_2
+[2026-03-19 10:12:22] [debug] recording: 停止录音
+[2026-03-19 10:12:22] [debug] recording: 进程: 17384
+[2026-03-19 10:12:22] [debug] action_4: 开始执行
+[2026-03-19 10:12:22] [debug] action_4: 线程: 踊り子
+[2026-03-19 10:12:22] [debug] action_5: 开始执行
+[2026-03-19 10:12:22] [debug] action_5: 线程: 踊り子
+[2026-03-19 10:12:22] [debug] applyMetadataToFlacByFilename: 开始为 flac 添加元数据
+[2026-03-19 10:12:22] [debug] applyMetadataToFlacByFilename: 线程: 踊り子
+[2026-03-19 10:12:22] [debug] applyMetadataToFlacByFilename: flacPath: /Users/opusarc/CLionProjects/MusicCat/output/踊り子.flac
+[2026-03-19 10:12:23] [debug] flacConvertedToM4aByFilename: 开始转换音频格式
+[2026-03-19 10:12:23] [debug] flacConvertedToM4aByFilename: 线程: 踊り子
+[2026-03-19 10:12:23] [debug] flacConvertedToM4aByFilename: flacPath: /Users/opusarc/CLionProjects/MusicCat/output/踊り子.flac
+[2026-03-19 10:12:23] [debug] flacConvertedToM4aByFilename: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/踊り子.m4a
+[2026-03-19 10:12:23] [debug] applyMetadataToM4aByFilename: 开始给 m4a 添加元数据
+[2026-03-19 10:12:23] [debug] applyMetadataToM4aByFilename: 线程: 踊り子
+[2026-03-19 10:12:23] [debug] applyMetadataToM4aByFilename: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/踊り子.m4a
+[2026-03-19 10:12:23] [debug] applyCover: 开始为 m4a 添加封面
+[2026-03-19 10:12:23] [debug] applyCover: 线程: 踊り子
+[2026-03-19 10:12:23] [debug] applyCover: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/踊り子.m4a
+[2026-03-19 10:12:23] [debug] organizeAlbums: 开始整理指定的文件
+[2026-03-19 10:12:23] [debug] organizeAlbums: 线程踊り子
+[2026-03-19 10:12:24] [debug] deleteJpg: 开始删除指定的 jpg 文件
+[2026-03-19 10:12:24] [debug] deleteJpg: 线程: 踊り子
+[2026-03-19 10:12:24] [debug] deleteJpg: jpgPath: /Users/opusarc/CLionProjects/MusicCat/output/踊り子.jpg
+[2026-03-19 10:12:24] [debug] ！！！！！线程:踊り子已经处理完毕！！！
+[2026-03-19 10:12:27] [info] A piece of music was played.
+[2026-03-19 10:12:27] [debug] 开始执行 action_1
+[2026-03-19 10:12:28] [debug] action_3: 开始执行
+[2026-03-19 10:12:28] [debug] action_3: 线程: UNDEAD
+[2026-03-19 10:12:28] [debug] recording: 开始录音
+[2026-03-19 10:12:28] [debug] recording: 线程UNDEAD
+[2026-03-19 10:12:28] [debug] recording: 进程19424
+[2026-03-19 10:12:28] [debug] scrapingCover: 抓取封面
+[2026-03-19 10:12:28] [debug] scrapingCover: 线程: UNDEAD
+[2026-03-19 10:12:28] [debug] scrapingCover: 抓取的封面: UNDEAD.jpg
+[2026-03-19 10:12:34] [debug] !!!!!!!!!!!!!      Track switching detected.
+[2026-03-19 10:12:34] [info] The music seems to have been paused.
+[2026-03-19 10:12:34] [debug] 开始执行 action_2
+[2026-03-19 10:12:34] [debug] recording: 停止录音
+[2026-03-19 10:12:34] [debug] recording: 进程: 19424
+[2026-03-19 10:12:34] [debug] action_4: 开始执行
+[2026-03-19 10:12:34] [debug] action_4: 线程: UNDEAD
+[2026-03-19 10:12:34] [debug] action_5: 开始执行
+[2026-03-19 10:12:34] [debug] action_5: 线程: UNDEAD
+[2026-03-19 10:12:34] [debug] applyMetadataToFlacByFilename: 开始为 flac 添加元数据
+[2026-03-19 10:12:34] [debug] applyMetadataToFlacByFilename: 线程: UNDEAD
+[2026-03-19 10:12:34] [debug] applyMetadataToFlacByFilename: flacPath: /Users/opusarc/CLionProjects/MusicCat/output/UNDEAD.flac
+[2026-03-19 10:12:35] [debug] flacConvertedToM4aByFilename: 开始转换音频格式
+[2026-03-19 10:12:35] [debug] flacConvertedToM4aByFilename: 线程: UNDEAD
+[2026-03-19 10:12:35] [debug] flacConvertedToM4aByFilename: flacPath: /Users/opusarc/CLionProjects/MusicCat/output/UNDEAD.flac
+[2026-03-19 10:12:35] [debug] flacConvertedToM4aByFilename: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/UNDEAD.m4a
+[2026-03-19 10:12:35] [debug] applyMetadataToM4aByFilename: 开始给 m4a 添加元数据
+[2026-03-19 10:12:35] [debug] applyMetadataToM4aByFilename: 线程: UNDEAD
+[2026-03-19 10:12:35] [debug] applyMetadataToM4aByFilename: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/UNDEAD.m4a
+[2026-03-19 10:12:35] [debug] applyCover: 开始为 m4a 添加封面
+[2026-03-19 10:12:35] [debug] applyCover: 线程: UNDEAD
+[2026-03-19 10:12:35] [debug] applyCover: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/UNDEAD.m4a
+[2026-03-19 10:12:35] [debug] organizeAlbums: 开始整理指定的文件
+[2026-03-19 10:12:35] [debug] organizeAlbums: 线程UNDEAD
+[2026-03-19 10:12:35] [info] A piece of music was played.
+[2026-03-19 10:12:35] [debug] 开始执行 action_1
+[2026-03-19 10:12:35] [debug] deleteJpg: 开始删除指定的 jpg 文件
+[2026-03-19 10:12:35] [debug] deleteJpg: 线程: UNDEAD
+[2026-03-19 10:12:35] [debug] deleteJpg: jpgPath: /Users/opusarc/CLionProjects/MusicCat/output/UNDEAD.jpg
+[2026-03-19 10:12:35] [debug] ！！！！！线程:UNDEAD已经处理完毕！！！
+[2026-03-19 10:12:36] [debug] action_3: 开始执行
+[2026-03-19 10:12:36] [debug] action_3: 线程: Bokuno Koto
+[2026-03-19 10:12:36] [debug] recording: 开始录音
+[2026-03-19 10:12:36] [debug] recording: 线程Bokuno Koto
+[2026-03-19 10:12:36] [debug] recording: 进程19702
+[2026-03-19 10:12:36] [debug] scrapingCover: 抓取封面
+[2026-03-19 10:12:36] [debug] scrapingCover: 线程: Bokuno Koto
+[2026-03-19 10:12:36] [debug] scrapingCover: 抓取的封面: Bokuno Koto.jpg
+[2026-03-19 10:12:42] [info] The music seems to have been paused.
+[2026-03-19 10:12:42] [debug] 开始执行 action_2
+[2026-03-19 10:12:42] [debug] recording: 停止录音
+[2026-03-19 10:12:42] [debug] recording: 进程: 19702
+[2026-03-19 10:12:42] [debug] action_4: 开始执行
+[2026-03-19 10:12:42] [debug] action_4: 线程: Bokuno Koto
+[2026-03-19 10:12:42] [debug] action_5: 开始执行
+[2026-03-19 10:12:42] [debug] action_5: 线程: Bokuno Koto
+[2026-03-19 10:12:42] [debug] applyMetadataToFlacByFilename: 开始为 flac 添加元数据
+[2026-03-19 10:12:42] [debug] applyMetadataToFlacByFilename: 线程: Bokuno Koto
+[2026-03-19 10:12:42] [debug] applyMetadataToFlacByFilename: flacPath: /Users/opusarc/CLionProjects/MusicCat/output/Bokuno Koto.flac
+[2026-03-19 10:12:42] [debug] flacConvertedToM4aByFilename: 开始转换音频格式
+[2026-03-19 10:12:42] [debug] flacConvertedToM4aByFilename: 线程: Bokuno Koto
+[2026-03-19 10:12:42] [debug] flacConvertedToM4aByFilename: flacPath: /Users/opusarc/CLionProjects/MusicCat/output/Bokuno Koto.flac
+[2026-03-19 10:12:42] [debug] flacConvertedToM4aByFilename: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/Bokuno Koto.m4a
+[2026-03-19 10:12:42] [debug] applyMetadataToM4aByFilename: 开始给 m4a 添加元数据
+[2026-03-19 10:12:42] [debug] applyMetadataToM4aByFilename: 线程: Bokuno Koto
+[2026-03-19 10:12:42] [debug] applyMetadataToM4aByFilename: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/Bokuno Koto.m4a
+[2026-03-19 10:12:42] [debug] applyCover: 开始为 m4a 添加封面
+[2026-03-19 10:12:42] [debug] applyCover: 线程: Bokuno Koto
+[2026-03-19 10:12:42] [debug] applyCover: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/Bokuno Koto.m4a
+[2026-03-19 10:12:42] [debug] organizeAlbums: 开始整理指定的文件
+[2026-03-19 10:12:42] [debug] organizeAlbums: 线程Bokuno Koto
+[2026-03-19 10:12:42] [debug] deleteJpg: 开始删除指定的 jpg 文件
+[2026-03-19 10:12:42] [debug] deleteJpg: 线程: Bokuno Koto
+[2026-03-19 10:12:42] [debug] deleteJpg: jpgPath: /Users/opusarc/CLionProjects/MusicCat/output/Bokuno Koto.jpg
+[2026-03-19 10:12:42] [debug] ！！！！！线程:Bokuno Koto已经处理完毕！！！
+[2026-03-19 10:12:45] [info] A piece of music was played.
+[2026-03-19 10:12:45] [debug] 开始执行 action_1
+[2026-03-19 10:12:46] [debug] action_3: 开始执行
+[2026-03-19 10:12:46] [debug] action_3: 线程: Cry Baby
+[2026-03-19 10:12:46] [debug] recording: 开始录音
+[2026-03-19 10:12:46] [debug] recording: 线程Cry Baby
+[2026-03-19 10:12:46] [debug] recording: 进程19998
+[2026-03-19 10:12:46] [debug] scrapingCover: 抓取封面
+[2026-03-19 10:12:46] [debug] scrapingCover: 线程: Cry Baby
+[2026-03-19 10:12:46] [debug] scrapingCover: 抓取的封面: Cry Baby.jpg
+[2026-03-19 10:12:53] [debug] !!!!!!!!!!!!!      Track switching detected.
+[2026-03-19 10:12:53] [info] The music seems to have been paused.
+[2026-03-19 10:12:53] [debug] 开始执行 action_2
+[2026-03-19 10:12:53] [debug] recording: 停止录音
+[2026-03-19 10:12:53] [debug] recording: 进程: 19998
+[2026-03-19 10:12:53] [debug] action_4: 开始执行
+[2026-03-19 10:12:53] [debug] action_4: 线程: Cry Baby
+[2026-03-19 10:12:53] [debug] action_5: 开始执行
+[2026-03-19 10:12:53] [debug] action_5: 线程: Cry Baby
+[2026-03-19 10:12:53] [debug] applyMetadataToFlacByFilename: 开始为 flac 添加元数据
+[2026-03-19 10:12:53] [debug] applyMetadataToFlacByFilename: 线程: Cry Baby
+[2026-03-19 10:12:53] [debug] applyMetadataToFlacByFilename: flacPath: /Users/opusarc/CLionProjects/MusicCat/output/Cry Baby.flac
+[2026-03-19 10:12:53] [debug] flacConvertedToM4aByFilename: 开始转换音频格式
+[2026-03-19 10:12:53] [debug] flacConvertedToM4aByFilename: 线程: Cry Baby
+[2026-03-19 10:12:53] [debug] flacConvertedToM4aByFilename: flacPath: /Users/opusarc/CLionProjects/MusicCat/output/Cry Baby.flac
+[2026-03-19 10:12:53] [debug] flacConvertedToM4aByFilename: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/Cry Baby.m4a
+[2026-03-19 10:12:53] [debug] applyMetadataToM4aByFilename: 开始给 m4a 添加元数据
+[2026-03-19 10:12:53] [debug] applyMetadataToM4aByFilename: 线程: Cry Baby
+[2026-03-19 10:12:53] [debug] applyMetadataToM4aByFilename: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/Cry Baby.m4a
+[2026-03-19 10:12:53] [debug] applyCover: 开始为 m4a 添加封面
+[2026-03-19 10:12:53] [debug] applyCover: 线程: Cry Baby
+[2026-03-19 10:12:53] [debug] applyCover: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/Cry Baby.m4a
+[2026-03-19 10:12:53] [debug] organizeAlbums: 开始整理指定的文件
+[2026-03-19 10:12:53] [debug] organizeAlbums: 线程Cry Baby
+[2026-03-19 10:12:53] [info] A piece of music was played.
+[2026-03-19 10:12:53] [debug] 开始执行 action_1
+[2026-03-19 10:12:54] [debug] deleteJpg: 开始删除指定的 jpg 文件
+[2026-03-19 10:12:54] [debug] deleteJpg: 线程: Cry Baby
+[2026-03-19 10:12:54] [debug] deleteJpg: jpgPath: /Users/opusarc/CLionProjects/MusicCat/output/Cry Baby.jpg
+[2026-03-19 10:12:54] [debug] ！！！！！线程:Cry Baby已经处理完毕！！！
+[2026-03-19 10:12:54] [debug] action_3: 开始执行
+[2026-03-19 10:12:54] [debug] action_3: 线程: Happy Birthday
+[2026-03-19 10:12:54] [debug] recording: 开始录音
+[2026-03-19 10:12:54] [debug] recording: 线程Happy Birthday
+[2026-03-19 10:12:54] [debug] recording: 进程20288
+[2026-03-19 10:12:54] [debug] scrapingCover: 抓取封面
+[2026-03-19 10:12:54] [debug] scrapingCover: 线程: Happy Birthday
+[2026-03-19 10:12:55] [debug] scrapingCover: 抓取的封面: Happy Birthday.jpg
+[2026-03-19 10:13:03] [debug] !!!!!!!!!!!!!      Track switching detected.
+[2026-03-19 10:13:04] [info] The music seems to have been paused.
+[2026-03-19 10:13:04] [debug] 开始执行 action_2
+[2026-03-19 10:13:04] [debug] recording: 停止录音
+[2026-03-19 10:13:04] [debug] recording: 进程: 20288
+[2026-03-19 10:13:04] [debug] action_4: 开始执行
+[2026-03-19 10:13:04] [debug] action_4: 线程: Happy Birthday
+[2026-03-19 10:13:04] [debug] action_5: 开始执行
+[2026-03-19 10:13:04] [debug] action_5: 线程: Happy Birthday
+[2026-03-19 10:13:04] [debug] applyMetadataToFlacByFilename: 开始为 flac 添加元数据
+[2026-03-19 10:13:04] [debug] applyMetadataToFlacByFilename: 线程: Happy Birthday
+[2026-03-19 10:13:04] [debug] applyMetadataToFlacByFilename: flacPath: /Users/opusarc/CLionProjects/MusicCat/output/Happy Birthday.flac
+[2026-03-19 10:13:04] [debug] flacConvertedToM4aByFilename: 开始转换音频格式
+[2026-03-19 10:13:04] [debug] flacConvertedToM4aByFilename: 线程: Happy Birthday
+[2026-03-19 10:13:04] [debug] flacConvertedToM4aByFilename: flacPath: /Users/opusarc/CLionProjects/MusicCat/output/Happy Birthday.flac
+[2026-03-19 10:13:04] [debug] flacConvertedToM4aByFilename: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/Happy Birthday.m4a
+[2026-03-19 10:13:04] [debug] applyMetadataToM4aByFilename: 开始给 m4a 添加元数据
+[2026-03-19 10:13:04] [debug] applyMetadataToM4aByFilename: 线程: Happy Birthday
+[2026-03-19 10:13:04] [debug] applyMetadataToM4aByFilename: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/Happy Birthday.m4a
+[2026-03-19 10:13:04] [debug] applyCover: 开始为 m4a 添加封面
+[2026-03-19 10:13:04] [debug] applyCover: 线程: Happy Birthday
+[2026-03-19 10:13:04] [debug] applyCover: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/Happy Birthday.m4a
+[2026-03-19 10:13:04] [debug] organizeAlbums: 开始整理指定的文件
+[2026-03-19 10:13:04] [debug] organizeAlbums: 线程Happy Birthday
+[2026-03-19 10:13:04] [info] A piece of music was played.
+[2026-03-19 10:13:04] [debug] 开始执行 action_1
+[2026-03-19 10:13:04] [debug] deleteJpg: 开始删除指定的 jpg 文件
+[2026-03-19 10:13:04] [debug] deleteJpg: 线程: Happy Birthday
+[2026-03-19 10:13:04] [debug] deleteJpg: jpgPath: /Users/opusarc/CLionProjects/MusicCat/output/Happy Birthday.jpg
+[2026-03-19 10:13:04] [debug] ！！！！！线程:Happy Birthday已经处理完毕！！！
+[2026-03-19 10:13:05] [debug] action_3: 开始执行
+[2026-03-19 10:13:05] [debug] action_3: 线程: わたしに花束
+[2026-03-19 10:13:05] [debug] recording: 开始录音
+[2026-03-19 10:13:05] [debug] recording: 线程わたしに花束
+[2026-03-19 10:13:05] [debug] recording: 进程20650
+[2026-03-19 10:13:05] [debug] scrapingCover: 抓取封面
+[2026-03-19 10:13:05] [debug] scrapingCover: 线程: わたしに花束
+[2026-03-19 10:13:05] [debug] scrapingCover: 抓取的封面: わたしに花束.jpg
+[2026-03-19 10:13:14] [debug] !!!!!!!!!!!!!      Track switching detected.
+[2026-03-19 10:13:14] [info] The music seems to have been paused.
+[2026-03-19 10:13:14] [debug] 开始执行 action_2
+[2026-03-19 10:13:14] [debug] recording: 停止录音
+[2026-03-19 10:13:14] [debug] recording: 进程: 20650
+[2026-03-19 10:13:14] [debug] action_4: 开始执行
+[2026-03-19 10:13:14] [debug] action_4: 线程: わたしに花束
+[2026-03-19 10:13:14] [debug] action_5: 开始执行
+[2026-03-19 10:13:14] [debug] action_5: 线程: わたしに花束
+[2026-03-19 10:13:14] [debug] applyMetadataToFlacByFilename: 开始为 flac 添加元数据
+[2026-03-19 10:13:14] [debug] applyMetadataToFlacByFilename: 线程: わたしに花束
+[2026-03-19 10:13:15] [debug] applyMetadataToFlacByFilename: flacPath: /Users/opusarc/CLionProjects/MusicCat/output/わたしに花束.flac
+[2026-03-19 10:13:15] [debug] flacConvertedToM4aByFilename: 开始转换音频格式
+[2026-03-19 10:13:15] [debug] flacConvertedToM4aByFilename: 线程: わたしに花束
+[2026-03-19 10:13:15] [debug] flacConvertedToM4aByFilename: flacPath: /Users/opusarc/CLionProjects/MusicCat/output/わたしに花束.flac
+[2026-03-19 10:13:15] [debug] flacConvertedToM4aByFilename: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/わたしに花束.m4a
+[2026-03-19 10:13:15] [debug] applyMetadataToM4aByFilename: 开始给 m4a 添加元数据
+[2026-03-19 10:13:15] [debug] applyMetadataToM4aByFilename: 线程: わたしに花束
+[2026-03-19 10:13:15] [debug] applyMetadataToM4aByFilename: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/わたしに花束.m4a
+[2026-03-19 10:13:15] [debug] applyCover: 开始为 m4a 添加封面
+[2026-03-19 10:13:15] [debug] applyCover: 线程: わたしに花束
+[2026-03-19 10:13:15] [debug] applyCover: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/わたしに花束.m4a
+[2026-03-19 10:13:15] [debug] organizeAlbums: 开始整理指定的文件
+[2026-03-19 10:13:15] [debug] organizeAlbums: 线程わたしに花束
+[2026-03-19 10:13:15] [info] A piece of music was played.
+[2026-03-19 10:13:15] [debug] 开始执行 action_1
+[2026-03-19 10:13:15] [debug] deleteJpg: 开始删除指定的 jpg 文件
+[2026-03-19 10:13:15] [debug] deleteJpg: 线程: わたしに花束
+[2026-03-19 10:13:15] [debug] deleteJpg: jpgPath: /Users/opusarc/CLionProjects/MusicCat/output/わたしに花束.jpg
+[2026-03-19 10:13:15] [debug] ！！！！！线程:わたしに花束已经处理完毕！！！
+[2026-03-19 10:13:16] [debug] action_3: 开始执行
+[2026-03-19 10:13:16] [debug] action_3: 线程: Cinderella Boy
+[2026-03-19 10:13:16] [debug] recording: 开始录音
+[2026-03-19 10:13:16] [debug] recording: 线程Cinderella Boy
+[2026-03-19 10:13:16] [debug] recording: 进程21014
+[2026-03-19 10:13:16] [debug] scrapingCover: 抓取封面
+[2026-03-19 10:13:16] [debug] scrapingCover: 线程: Cinderella Boy
+[2026-03-19 10:13:16] [debug] scrapingCover: 抓取的封面: Cinderella Boy.jpg
+[2026-03-19 10:13:24] [info] The music seems to have been paused.
+[2026-03-19 10:13:24] [debug] 开始执行 action_2
+[2026-03-19 10:13:24] [debug] recording: 停止录音
+[2026-03-19 10:13:24] [debug] recording: 进程: 21014
+[2026-03-19 10:13:24] [debug] action_4: 开始执行
+[2026-03-19 10:13:24] [debug] action_4: 线程: Cinderella Boy
+[2026-03-19 10:13:24] [debug] action_5: 开始执行
+[2026-03-19 10:13:24] [debug] action_5: 线程: Cinderella Boy
+[2026-03-19 10:13:24] [debug] applyMetadataToFlacByFilename: 开始为 flac 添加元数据
+[2026-03-19 10:13:24] [debug] applyMetadataToFlacByFilename: 线程: Cinderella Boy
+[2026-03-19 10:13:24] [debug] applyMetadataToFlacByFilename: flacPath: /Users/opusarc/CLionProjects/MusicCat/output/Cinderella Boy.flac
+[2026-03-19 10:13:24] [debug] flacConvertedToM4aByFilename: 开始转换音频格式
+[2026-03-19 10:13:24] [debug] flacConvertedToM4aByFilename: 线程: Cinderella Boy
+[2026-03-19 10:13:24] [debug] flacConvertedToM4aByFilename: flacPath: /Users/opusarc/CLionProjects/MusicCat/output/Cinderella Boy.flac
+[2026-03-19 10:13:24] [debug] flacConvertedToM4aByFilename: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/Cinderella Boy.m4a
+[2026-03-19 10:13:24] [debug] applyMetadataToM4aByFilename: 开始给 m4a 添加元数据
+[2026-03-19 10:13:24] [debug] applyMetadataToM4aByFilename: 线程: Cinderella Boy
+[2026-03-19 10:13:24] [debug] applyMetadataToM4aByFilename: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/Cinderella Boy.m4a
+[2026-03-19 10:13:24] [debug] applyCover: 开始为 m4a 添加封面
+[2026-03-19 10:13:24] [debug] applyCover: 线程: Cinderella Boy
+[2026-03-19 10:13:24] [debug] applyCover: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/Cinderella Boy.m4a
+[2026-03-19 10:13:24] [debug] organizeAlbums: 开始整理指定的文件
+[2026-03-19 10:13:24] [debug] organizeAlbums: 线程Cinderella Boy
+[2026-03-19 10:13:24] [debug] deleteJpg: 开始删除指定的 jpg 文件
+[2026-03-19 10:13:24] [debug] deleteJpg: 线程: Cinderella Boy
+[2026-03-19 10:13:24] [debug] deleteJpg: jpgPath: /Users/opusarc/CLionProjects/MusicCat/output/Cinderella Boy.jpg
+[2026-03-19 10:13:24] [debug] ！！！！！线程:Cinderella Boy已经处理完毕！！！
+[2026-03-19 10:13:26] [info] A piece of music was played.
+[2026-03-19 10:13:26] [debug] 开始执行 action_1
+[2026-03-19 10:13:27] [info] This track was not recorded as it was not played from the beginning.
+[2026-03-19 10:13:28] [debug] !!!!!!!!!!!!!      Track switching detected.
+[2026-03-19 10:13:29] [info] The music seems to have been paused.
+[2026-03-19 10:13:29] [info] A piece of music was played.
+[2026-03-19 10:13:29] [debug] 开始执行 action_1
+[2026-03-19 10:13:30] [debug] action_3: 开始执行
+[2026-03-19 10:13:30] [debug] action_3: 线程: Lemon
+[2026-03-19 10:13:30] [debug] recording: 开始录音
+[2026-03-19 10:13:30] [debug] recording: 线程Lemon
+[2026-03-19 10:13:30] [debug] recording: 进程21442
+[2026-03-19 10:13:30] [debug] scrapingCover: 抓取封面
+[2026-03-19 10:13:30] [debug] scrapingCover: 线程: Lemon
+[2026-03-19 10:13:30] [debug] scrapingCover: 抓取的封面: Lemon.jpg
+[2026-03-19 10:13:34] [debug] !!!!!!!!!!!!!      Track switching detected.
+[2026-03-19 10:13:34] [info] The music seems to have been paused.
+[2026-03-19 10:13:34] [debug] 开始执行 action_2
+[2026-03-19 10:13:34] [debug] recording: 停止录音
+[2026-03-19 10:13:34] [debug] recording: 进程: 21442
+[2026-03-19 10:13:34] [debug] action_4: 开始执行
+[2026-03-19 10:13:34] [debug] action_4: 线程: Cinderella Boy
+[2026-03-19 10:13:34] [debug] action_5: 开始执行
+[2026-03-19 10:13:34] [debug] action_5: 线程: Cinderella Boy
+[2026-03-19 10:13:34] [debug] applyMetadataToFlacByFilename: 开始为 flac 添加元数据
+[2026-03-19 10:13:34] [debug] applyMetadataToFlacByFilename: 线程: Cinderella Boy
+[2026-03-19 10:14:06] [info] Last time used: 2026-03-19 10:13:34
+[2026-03-19 10:14:08] [info] Apple Music is running.
+[2026-03-19 10:14:08] [info] But no music has been played yet.
+[2026-03-19 10:14:10] [info] A piece of music was played.
+[2026-03-19 10:14:10] [debug] 开始执行 action_1
+[2026-03-19 10:14:11] [info] This track was not recorded as it was not played from the beginning.
+[2026-03-19 10:14:12] [debug] !!!!!!!!!!!!!      Track switching detected.
+[2026-03-19 10:14:12] [info] The music seems to have been paused.
+[2026-03-19 10:14:12] [info] A piece of music was played.
+[2026-03-19 10:14:12] [debug] 开始执行 action_1
+[2026-03-19 10:14:13] [debug] action_3: 开始执行
+[2026-03-19 10:14:13] [debug] action_3: 线程: カメレオン
+[2026-03-19 10:14:13] [debug] recording: 开始录音
+[2026-03-19 10:14:13] [debug] recording: 线程カメレオン
+[2026-03-19 10:14:13] [debug] recording: 进程21683
+[2026-03-19 10:14:13] [debug] scrapingCover: 抓取封面
+[2026-03-19 10:14:13] [debug] scrapingCover: 线程: カメレオン
+[2026-03-19 10:14:13] [debug] scrapingCover: 抓取的封面: カメレオン.jpg
+[2026-03-19 10:14:15] [debug] !!!!!!!!!!!!!      Track switching detected.
+[2026-03-19 10:14:15] [info] The music seems to have been paused.
+[2026-03-19 10:14:15] [debug] 开始执行 action_2
+[2026-03-19 10:14:15] [debug] recording: 停止录音
+[2026-03-19 10:14:15] [debug] recording: 进程: 21683
+[2026-03-19 10:14:15] [debug] action_4: 开始执行
+[2026-03-19 10:14:15] [debug] action_4: 线程: 始まりの歌
+[2026-03-19 10:14:15] [debug] action_5: 开始执行
+[2026-03-19 10:14:15] [debug] action_5: 线程: 始まりの歌
+[2026-03-19 10:14:15] [debug] applyMetadataToFlacByFilename: 开始为 flac 添加元数据
+[2026-03-19 10:14:15] [debug] applyMetadataToFlacByFilename: 线程: 始まりの歌
+[2026-03-19 10:22:17] [info] Last time used: 2026-03-19 10:14:15
+[2026-03-19 10:22:19] [info] Apple Music is running.
+[2026-03-19 10:22:19] [info] But no music has been played yet.
+[2026-03-19 10:22:25] [info] A piece of music was played.
+[2026-03-19 10:22:25] [debug] 开始执行 action_1
+[2026-03-19 10:22:28] [debug] action_3: 开始执行
+[2026-03-19 10:22:28] [debug] action_3: 线程: saman
+[2026-03-19 10:22:28] [debug] recording: 开始录音
+[2026-03-19 10:22:28] [debug] recording: 线程saman
+[2026-03-19 10:22:28] [debug] recording: 进程22163
+[2026-03-19 10:22:28] [debug] scrapingCover: 抓取封面
+[2026-03-19 10:22:28] [debug] scrapingCover: 线程: saman
+[2026-03-19 10:22:29] [debug] scrapingCover: 抓取的封面: saman.jpg
+[2026-03-19 10:22:34] [debug] 开始执行 action_2
+[2026-03-19 10:22:34] [debug] recording: 停止录音
+[2026-03-19 10:22:34] [debug] recording: 进程: 22163
+[2026-03-19 10:22:34] [info] Recording has been stopped due to playback stuttering or other abnormal behavior. The recording will wait for the next recording window.
+[2026-03-19 10:22:34] [debug] action_4: 开始执行
+[2026-03-19 10:22:34] [debug] action_4: 线程: saman
+[2026-03-19 10:22:34] [debug] action_5: 开始执行
+[2026-03-19 10:22:34] [debug] action_5: 线程: saman
+[2026-03-19 10:22:34] [debug] applyMetadataToFlacByFilename: 开始为 flac 添加元数据
+[2026-03-19 10:22:34] [debug] applyMetadataToFlacByFilename: 线程: saman
+[2026-03-19 10:22:34] [debug] !!!!!!!!!!!!!      Track switching detected.
+[2026-03-19 10:22:34] [debug] applyMetadataToFlacByFilename: flacPath: /Users/opusarc/CLionProjects/MusicCat/output/saman.flac
+[2026-03-19 10:22:34] [info] The music seems to have been paused.
+[2026-03-19 10:22:34] [debug] flacConvertedToM4aByFilename: 开始转换音频格式
+[2026-03-19 10:22:34] [debug] flacConvertedToM4aByFilename: 线程: saman
+[2026-03-19 10:22:34] [debug] flacConvertedToM4aByFilename: flacPath: /Users/opusarc/CLionProjects/MusicCat/output/saman.flac
+[2026-03-19 10:22:34] [debug] flacConvertedToM4aByFilename: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/saman.m4a
+[2026-03-19 10:22:34] [debug] applyMetadataToM4aByFilename: 开始给 m4a 添加元数据
+[2026-03-19 10:22:34] [debug] applyMetadataToM4aByFilename: 线程: saman
+[2026-03-19 10:22:34] [debug] applyMetadataToM4aByFilename: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/saman.m4a
+[2026-03-19 10:22:34] [debug] applyCover: 开始为 m4a 添加封面
+[2026-03-19 10:22:34] [debug] applyCover: 线程: saman
+[2026-03-19 10:22:34] [debug] applyCover: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/saman.m4a
+[2026-03-19 10:22:34] [debug] organizeAlbums: 开始整理指定的文件
+[2026-03-19 10:22:34] [debug] organizeAlbums: 线程saman
+[2026-03-19 10:22:35] [info] A piece of music was played.
+[2026-03-19 10:22:35] [debug] 开始执行 action_1
+[2026-03-19 10:22:35] [debug] deleteJpg: 开始删除指定的 jpg 文件
+[2026-03-19 10:22:35] [debug] deleteJpg: 线程: saman
+[2026-03-19 10:22:35] [debug] deleteJpg: jpgPath: /Users/opusarc/CLionProjects/MusicCat/output/saman.jpg
+[2026-03-19 10:22:35] [debug] ！！！！！线程:saman已经处理完毕！！！
+[2026-03-19 10:22:36] [debug] action_3: 开始执行
+[2026-03-19 10:22:36] [debug] action_3: 线程: Lyric Pieces Book V, Op. 54 - No. 4, Notturno
+[2026-03-19 10:22:36] [debug] recording: 开始录音
+[2026-03-19 10:22:36] [debug] recording: 线程Lyric Pieces Book V, Op. 54 - No. 4, Notturno
+[2026-03-19 10:22:36] [debug] recording: 进程22419
+[2026-03-19 10:22:36] [debug] scrapingCover: 抓取封面
+[2026-03-19 10:22:36] [debug] scrapingCover: 线程: Lyric Pieces Book V, Op. 54 - No. 4, Notturno
+[2026-03-19 10:22:36] [debug] scrapingCover: 抓取的封面: Lyric Pieces Book V, Op. 54 - No. 4, Notturno.jpg
+[2026-03-19 10:22:41] [debug] !!!!!!!!!!!!!      Track switching detected.
+[2026-03-19 10:22:42] [info] The music seems to have been paused.
+[2026-03-19 10:22:42] [debug] 开始执行 action_2
+[2026-03-19 10:22:42] [debug] recording: 停止录音
+[2026-03-19 10:22:42] [debug] recording: 进程: 22419
+[2026-03-19 10:22:42] [debug] action_4: 开始执行
+[2026-03-19 10:22:42] [debug] action_4: 线程: Lyric Pieces Book V, Op. 54 - No. 4, Notturno
+[2026-03-19 10:22:42] [debug] action_5: 开始执行
+[2026-03-19 10:22:42] [debug] action_5: 线程: Lyric Pieces Book V, Op. 54 - No. 4, Notturno
+[2026-03-19 10:22:42] [debug] applyMetadataToFlacByFilename: 开始为 flac 添加元数据
+[2026-03-19 10:22:42] [debug] applyMetadataToFlacByFilename: 线程: Lyric Pieces Book V, Op. 54 - No. 4, Notturno
+[2026-03-19 10:22:42] [debug] applyMetadataToFlacByFilename: flacPath: /Users/opusarc/CLionProjects/MusicCat/output/Lyric Pieces Book V, Op. 54 - No. 4, Notturno.flac
+[2026-03-19 10:22:42] [debug] flacConvertedToM4aByFilename: 开始转换音频格式
+[2026-03-19 10:22:42] [debug] flacConvertedToM4aByFilename: 线程: Lyric Pieces Book V, Op. 54 - No. 4, Notturno
+[2026-03-19 10:22:42] [debug] flacConvertedToM4aByFilename: flacPath: /Users/opusarc/CLionProjects/MusicCat/output/Lyric Pieces Book V, Op. 54 - No. 4, Notturno.flac
+[2026-03-19 10:22:42] [debug] flacConvertedToM4aByFilename: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/Lyric Pieces Book V, Op. 54 - No. 4, Notturno.m4a
+[2026-03-19 10:22:42] [debug] applyMetadataToM4aByFilename: 开始给 m4a 添加元数据
+[2026-03-19 10:22:42] [debug] applyMetadataToM4aByFilename: 线程: Lyric Pieces Book V, Op. 54 - No. 4, Notturno
+[2026-03-19 10:22:42] [debug] applyMetadataToM4aByFilename: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/Lyric Pieces Book V, Op. 54 - No. 4, Notturno.m4a
+[2026-03-19 10:22:42] [debug] applyCover: 开始为 m4a 添加封面
+[2026-03-19 10:22:42] [debug] applyCover: 线程: Lyric Pieces Book V, Op. 54 - No. 4, Notturno
+[2026-03-19 10:22:42] [debug] applyCover: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/Lyric Pieces Book V, Op. 54 - No. 4, Notturno.m4a
+[2026-03-19 10:22:42] [debug] organizeAlbums: 开始整理指定的文件
+[2026-03-19 10:22:42] [debug] organizeAlbums: 线程Lyric Pieces Book V, Op. 54 - No. 4, Notturno
+[2026-03-19 10:22:42] [info] A piece of music was played.
+[2026-03-19 10:22:42] [debug] 开始执行 action_1
+[2026-03-19 10:22:42] [debug] deleteJpg: 开始删除指定的 jpg 文件
+[2026-03-19 10:22:42] [debug] deleteJpg: 线程: Lyric Pieces Book V, Op. 54 - No. 4, Notturno
+[2026-03-19 10:22:42] [debug] deleteJpg: jpgPath: /Users/opusarc/CLionProjects/MusicCat/output/Lyric Pieces Book V, Op. 54 - No. 4, Notturno.jpg
+[2026-03-19 10:22:42] [debug] ！！！！！线程:Lyric Pieces Book V, Op. 54 - No. 4, Notturno已经处理完毕！！！
+[2026-03-19 10:22:43] [debug] action_3: 开始执行
+[2026-03-19 10:22:43] [debug] action_3: 线程: A Faint Qualm for the Future
+[2026-03-19 10:22:43] [debug] recording: 开始录音
+[2026-03-19 10:22:43] [debug] recording: 线程A Faint Qualm for the Future
+[2026-03-19 10:22:43] [debug] recording: 进程22684
+[2026-03-19 10:22:43] [debug] scrapingCover: 抓取封面
+[2026-03-19 10:22:43] [debug] scrapingCover: 线程: A Faint Qualm for the Future
+[2026-03-19 10:22:43] [debug] scrapingCover: 抓取的封面: A Faint Qualm for the Future.jpg
+[2026-03-19 10:22:47] [info] The music seems to have been paused.
+[2026-03-19 10:22:47] [debug] 开始执行 action_2
+[2026-03-19 10:22:47] [debug] recording: 停止录音
+[2026-03-19 10:22:47] [debug] recording: 进程: 22684
+[2026-03-19 10:22:47] [debug] action_4: 开始执行
+[2026-03-19 10:22:47] [debug] action_4: 线程: A Faint Qualm for the Future
+[2026-03-19 10:22:47] [debug] action_5: 开始执行
+[2026-03-19 10:22:47] [debug] action_5: 线程: A Faint Qualm for the Future
+[2026-03-19 10:22:47] [debug] applyMetadataToFlacByFilename: 开始为 flac 添加元数据
+[2026-03-19 10:22:47] [debug] applyMetadataToFlacByFilename: 线程: A Faint Qualm for the Future
+[2026-03-19 10:22:47] [debug] applyMetadataToFlacByFilename: flacPath: /Users/opusarc/CLionProjects/MusicCat/output/A Faint Qualm for the Future.flac
+[2026-03-19 10:22:47] [debug] flacConvertedToM4aByFilename: 开始转换音频格式
+[2026-03-19 10:22:47] [debug] flacConvertedToM4aByFilename: 线程: A Faint Qualm for the Future
+[2026-03-19 10:22:47] [debug] flacConvertedToM4aByFilename: flacPath: /Users/opusarc/CLionProjects/MusicCat/output/A Faint Qualm for the Future.flac
+[2026-03-19 10:22:47] [debug] flacConvertedToM4aByFilename: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/A Faint Qualm for the Future.m4a
+[2026-03-19 10:22:47] [debug] applyMetadataToM4aByFilename: 开始给 m4a 添加元数据
+[2026-03-19 10:22:47] [debug] applyMetadataToM4aByFilename: 线程: A Faint Qualm for the Future
+[2026-03-19 10:22:47] [debug] applyMetadataToM4aByFilename: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/A Faint Qualm for the Future.m4a
+[2026-03-19 10:22:47] [debug] applyCover: 开始为 m4a 添加封面
+[2026-03-19 10:22:47] [debug] applyCover: 线程: A Faint Qualm for the Future
+[2026-03-19 10:22:47] [debug] applyCover: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/A Faint Qualm for the Future.m4a
+[2026-03-19 10:22:47] [debug] organizeAlbums: 开始整理指定的文件
+[2026-03-19 10:22:47] [debug] organizeAlbums: 线程A Faint Qualm for the Future
+[2026-03-19 10:22:48] [debug] deleteJpg: 开始删除指定的 jpg 文件
+[2026-03-19 10:22:48] [debug] deleteJpg: 线程: A Faint Qualm for the Future
+[2026-03-19 10:22:48] [debug] deleteJpg: jpgPath: /Users/opusarc/CLionProjects/MusicCat/output/A Faint Qualm for the Future.jpg
+[2026-03-19 10:22:48] [debug] ！！！！！线程:A Faint Qualm for the Future已经处理完毕！！！
+[2026-03-19 10:22:50] [info] A piece of music was played.
+[2026-03-19 10:22:50] [debug] 开始执行 action_1
+[2026-03-19 10:22:51] [debug] action_3: 开始执行
+[2026-03-19 10:22:51] [debug] action_3: 线程: Suite bergamasque, L. 75 - III. Clair de lune
+[2026-03-19 10:22:51] [debug] recording: 开始录音
+[2026-03-19 10:22:51] [debug] recording: 线程Suite bergamasque, L. 75 - III. Clair de lune
+[2026-03-19 10:22:51] [debug] recording: 进程22916
+[2026-03-19 10:22:51] [debug] scrapingCover: 抓取封面
+[2026-03-19 10:22:51] [debug] scrapingCover: 线程: Suite bergamasque, L. 75 - III. Clair de lune
+[2026-03-19 10:22:51] [debug] scrapingCover: 抓取的封面: Suite bergamasque, L. 75 - III. Clair de lune.jpg
+[2026-03-19 10:22:52] [debug] !!!!!!!!!!!!!      Track switching detected.
+[2026-03-19 10:22:52] [info] The music seems to have been paused.
+[2026-03-19 10:22:52] [debug] 开始执行 action_2
+[2026-03-19 10:22:52] [debug] recording: 停止录音
+[2026-03-19 10:22:52] [debug] recording: 进程: 22916
+[2026-03-19 10:22:52] [debug] action_4: 开始执行
+[2026-03-19 10:22:52] [debug] action_4: 线程: Suite bergamasque, L. 75 - III. Clair de lune
+[2026-03-19 10:22:52] [debug] action_5: 开始执行
+[2026-03-19 10:22:52] [debug] action_5: 线程: Suite bergamasque, L. 75 - III. Clair de lune
+[2026-03-19 10:22:52] [debug] applyMetadataToFlacByFilename: 开始为 flac 添加元数据
+[2026-03-19 10:22:52] [debug] applyMetadataToFlacByFilename: 线程: Suite bergamasque, L. 75 - III. Clair de lune
+[2026-03-19 10:22:52] [debug] applyMetadataToFlacByFilename: flacPath: /Users/opusarc/CLionProjects/MusicCat/output/Suite bergamasque, L. 75 - III. Clair de lune.flac
+[2026-03-19 10:22:52] [debug] flacConvertedToM4aByFilename: 开始转换音频格式
+[2026-03-19 10:22:52] [debug] flacConvertedToM4aByFilename: 线程: Suite bergamasque, L. 75 - III. Clair de lune
+[2026-03-19 10:22:52] [debug] flacConvertedToM4aByFilename: flacPath: /Users/opusarc/CLionProjects/MusicCat/output/Suite bergamasque, L. 75 - III. Clair de lune.flac
+[2026-03-19 10:22:52] [debug] flacConvertedToM4aByFilename: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/Suite bergamasque, L. 75 - III. Clair de lune.m4a
+[2026-03-19 10:22:52] [debug] applyMetadataToM4aByFilename: 开始给 m4a 添加元数据
+[2026-03-19 10:22:52] [debug] applyMetadataToM4aByFilename: 线程: Suite bergamasque, L. 75 - III. Clair de lune
+[2026-03-19 10:22:52] [debug] applyMetadataToM4aByFilename: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/Suite bergamasque, L. 75 - III. Clair de lune.m4a
+[2026-03-19 10:22:52] [debug] applyCover: 开始为 m4a 添加封面
+[2026-03-19 10:22:52] [debug] applyCover: 线程: Suite bergamasque, L. 75 - III. Clair de lune
+[2026-03-19 10:22:52] [debug] applyCover: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/Suite bergamasque, L. 75 - III. Clair de lune.m4a
+[2026-03-19 10:22:52] [debug] organizeAlbums: 开始整理指定的文件
+[2026-03-19 10:22:52] [debug] organizeAlbums: 线程Suite bergamasque, L. 75 - III. Clair de lune
+[2026-03-19 10:22:52] [info] A piece of music was played.
+[2026-03-19 10:22:52] [debug] 开始执行 action_1
+[2026-03-19 10:22:52] [debug] deleteJpg: 开始删除指定的 jpg 文件
+[2026-03-19 10:22:52] [debug] deleteJpg: 线程: Suite bergamasque, L. 75 - III. Clair de lune
+[2026-03-19 10:22:52] [debug] deleteJpg: jpgPath: /Users/opusarc/CLionProjects/MusicCat/output/Suite bergamasque, L. 75 - III. Clair de lune.jpg
+[2026-03-19 10:22:52] [debug] ！！！！！线程:Suite bergamasque, L. 75 - III. Clair de lune已经处理完毕！！！
+[2026-03-19 10:22:54] [debug] action_3: 开始执行
+[2026-03-19 10:22:54] [debug] action_3: 线程: A Sparrow Alighted upon Our Shoulder
+[2026-03-19 10:22:54] [debug] recording: 开始录音
+[2026-03-19 10:22:54] [debug] recording: 线程A Sparrow Alighted upon Our Shoulder
+[2026-03-19 10:22:54] [debug] recording: 进程23049
+[2026-03-19 10:22:54] [debug] scrapingCover: 抓取封面
+[2026-03-19 10:22:54] [debug] scrapingCover: 线程: A Sparrow Alighted upon Our Shoulder
+[2026-03-19 10:22:54] [debug] scrapingCover: 抓取的封面: A Sparrow Alighted upon Our Shoulder.jpg
+[2026-03-19 10:23:03] [info] The music seems to have been paused.
+[2026-03-19 10:23:03] [debug] 开始执行 action_2
+[2026-03-19 10:23:03] [debug] recording: 停止录音
+[2026-03-19 10:23:03] [debug] recording: 进程: 23049
+[2026-03-19 10:23:03] [debug] action_4: 开始执行
+[2026-03-19 10:23:03] [debug] action_4: 线程: A Sparrow Alighted upon Our Shoulder
+[2026-03-19 10:23:03] [debug] action_5: 开始执行
+[2026-03-19 10:23:03] [debug] action_5: 线程: A Sparrow Alighted upon Our Shoulder
+[2026-03-19 10:23:03] [debug] applyMetadataToFlacByFilename: 开始为 flac 添加元数据
+[2026-03-19 10:23:03] [debug] applyMetadataToFlacByFilename: 线程: A Sparrow Alighted upon Our Shoulder
+[2026-03-19 10:23:03] [debug] applyMetadataToFlacByFilename: flacPath: /Users/opusarc/CLionProjects/MusicCat/output/A Sparrow Alighted upon Our Shoulder.flac
+[2026-03-19 10:23:03] [debug] flacConvertedToM4aByFilename: 开始转换音频格式
+[2026-03-19 10:23:03] [debug] flacConvertedToM4aByFilename: 线程: A Sparrow Alighted upon Our Shoulder
+[2026-03-19 10:23:03] [debug] flacConvertedToM4aByFilename: flacPath: /Users/opusarc/CLionProjects/MusicCat/output/A Sparrow Alighted upon Our Shoulder.flac
+[2026-03-19 10:23:03] [debug] flacConvertedToM4aByFilename: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/A Sparrow Alighted upon Our Shoulder.m4a
+[2026-03-19 10:23:03] [debug] applyMetadataToM4aByFilename: 开始给 m4a 添加元数据
+[2026-03-19 10:23:03] [debug] applyMetadataToM4aByFilename: 线程: A Sparrow Alighted upon Our Shoulder
+[2026-03-19 10:23:03] [debug] applyMetadataToM4aByFilename: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/A Sparrow Alighted upon Our Shoulder.m4a
+[2026-03-19 10:23:03] [debug] applyCover: 开始为 m4a 添加封面
+[2026-03-19 10:23:03] [debug] applyCover: 线程: A Sparrow Alighted upon Our Shoulder
+[2026-03-19 10:23:03] [debug] applyCover: m4aPath: /Users/opusarc/CLionProjects/MusicCat/output/A Sparrow Alighted upon Our Shoulder.m4a
+[2026-03-19 10:23:03] [debug] organizeAlbums: 开始整理指定的文件
+[2026-03-19 10:23:03] [debug] organizeAlbums: 线程A Sparrow Alighted upon Our Shoulder
+[2026-03-19 10:23:04] [debug] deleteJpg: 开始删除指定的 jpg 文件
+[2026-03-19 10:23:04] [debug] deleteJpg: 线程: A Sparrow Alighted upon Our Shoulder
+[2026-03-19 10:23:04] [debug] deleteJpg: jpgPath: /Users/opusarc/CLionProjects/MusicCat/output/A Sparrow Alighted upon[2026-03-19 10:24:10] [info] Last time used: 2026-03-19 10:23:04
+[2026-03-19 10:24:12] [info] Apple Music is running.
+[2026-03-19 10:24:12] [info] But no music has been played yet.
+[2026-03-19 10:24:17] [info] A piece of music was played.
+[2026-03-19 10:24:17] [warning] [MyFfmpeg]: Incomplete Apple Music metadata.
+[2026-03-19 10:24:17] [warning] [MyFfmpeg]: Incomplete Apple Music metadata.
+[2026-03-19 10:24:17] [error] bad_optional_access
+[2026-03-19 10:24:18] [error] 未正确获取 meta

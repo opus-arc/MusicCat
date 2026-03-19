@@ -1,5 +1,5 @@
 /**
- * # MusicCat CLI Entry
+ *  MusicCat CLI Entry
  */
 
 #include <iostream>
@@ -8,7 +8,7 @@
 #include <Mcat.h>
 #include <CommonsInit.h>
 #include <csignal>
-#define MCAT_VERSION "version 0.1.1"
+#define MCAT_VERSION "version 0.1.2"
 
 std::atomic<bool> g_shouldExit = false;
 

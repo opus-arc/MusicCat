@@ -17,6 +17,9 @@ public:
     // 删除一个 flac 文件
     static void deleteFlacByName(const std::string& flacName);
 
+    // 侦测一个 flac 文件
+    static bool isFlacExist(const std::string &flacName);
+
     // txt 文件键值对读取
     static std::string txt_kvPair_reader(const std::string &path, const std::string &k);
 

@@ -280,7 +280,10 @@ AppleMusicMetadata Mcat::action_1() {
     try {
         // 获取当前播放的作品的元数据，更新 currMeta
         std::optional<AppleMusicMetadata> currMeta = MyAppleMusic::readAppleMusicMetadata();
-        MyAppleMusic::printAppleMusicMetadata(MyAppleMusic::readAppleMusicMetadata().value());
+        if (!currMeta.has_value()) {
+            Logger::warn("The reason why the metadata for this work could not be obtained may be because a music radio station was played or the system was being tested in other special scenarios. Works with incomplete metadata will not be recorded.");
+        }
+        MyAppleMusic::printAppleMusicMetadata(currMeta.value());
 
         // recordingMeta 是有别于从 Apple Music 上直接抓取到的 currMeta
         // 是需要考量工程因素，如文件名是否合乎规矩的、加工过的原数据
@@ -331,23 +334,25 @@ void Mcat::action_4(const AppleMusicMetadata &metadata) {
     testLog("action_4: 线程: " + metadata.title);
     // Logger::info("根据 action_5 的返回结果来加工数据");
     if (action_5(metadata)) {
+        if (!FileManager::isFlacExist(metadata.title))
+            Logger::warn("If too many operations are performed, or if the piece is too short, it will not be recorded until the next suitable recording window.");
+        else {
+            MyFfmpeg::applyMetadataToFlacByFilename(metadata.title, metadata);
 
-        MyFfmpeg::applyMetadataToFlacByFilename(metadata.title, metadata);
+            MyFfmpeg::flacConvertedToM4aByFilename(metadata.title);
 
-        MyFfmpeg::flacConvertedToM4aByFilename(metadata.title);
+            MyFfmpeg::applyMetadataToM4aByFilename(metadata.title, metadata);
 
-        MyFfmpeg::applyMetadataToM4aByFilename(metadata.title, metadata);
+            MyFfmpeg::applyCover(metadata.title);
 
-        MyFfmpeg::applyCover(metadata.title);
-
+            MyFfmpeg::organizeAlbums(metadata.title);
+        }
     } else {
         FileManager::deleteFlacByName(metadata.title);
     }
 
     FileManager::deleteJpg(metadata.title);
-
-    MyFfmpeg::organizeAlbums(metadata.title);
-
+    testLog("！！！！！线程:" + metadata.title + "已经处理完毕！！！");
 }
 
 // 检查数据是否纯净
