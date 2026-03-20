@@ -71,3 +71,9 @@ Additional behaviors:
 # License
 
 Apache-2.0
+
+## Acknowledgements
+
+We would like to thank Apple Music for its high-quality resources.
+
+Once again, we are reminded that the good stuff is always public and free.
