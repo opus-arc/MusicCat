@@ -1,1 +1,7 @@
 /output/
+/build*/
+/release/
+/*.tar.gz
+.DS_Store
+*.mid
+*.midi

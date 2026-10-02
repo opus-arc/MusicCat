@@ -1,2 +1,0 @@
-currOutputFolderPath=/Users/opusarc/CLionProjects/MusicCat/output
-currVirtualDevice=Apple Music Virtual Device

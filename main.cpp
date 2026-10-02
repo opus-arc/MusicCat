@@ -1,193 +1,163 @@
-/**
- *  MusicCat CLI Entry
- */
+#include "src/musiccat.hpp"
 
+#include <cstdlib>
+#include <exception>
+#include <getopt.h>
 #include <iostream>
+#include <optional>
 #include <string>
-#include <string_view>
-#include <Mcat.h>
-#include <CommonsInit.h>
-#include <csignal>
-#define MCAT_VERSION "0.1.2"
-
-std::atomic<bool> g_shouldExit = false;
-
-void signalHandler(int) {
-    g_shouldExit.store(true, std::memory_order_relaxed);
-}
-
-void help();
 
 namespace {
-    constexpr std::string_view kAppName = "mcat";
 
+enum class Action {
+    none, help, help_zh, help_ja, version, record, record_once, output, device,
+    status, list_devices, test, log
+};
 
-    void printUnknownCommand(const std::string_view command) {
-        std::cerr << "Unknown command: " << command << "\n\n";
-        help();
+struct CliOptions {
+    Action action = Action::none;
+    std::optional<std::string> value;
+};
+
+bool select_action(CliOptions& options, Action action,
+                   std::optional<std::string> value = std::nullopt) {
+    if (options.action != Action::none) return false;
+    options.action = action;
+    options.value = std::move(value);
+    return true;
+}
+
+int cli_entry(int argc, char* argv[]) {
+    CliOptions options;
+
+    // Compatibility with the original command-shaped interface.
+    if (argc == 2) {
+        const std::string legacy = argv[1];
+        if (legacy == "ready") options.action = Action::record;
+        else if (legacy == "log") options.action = Action::log;
+        else if (legacy == "help") options.action = Action::help;
+        else if (legacy == "zh") options.action = Action::help_zh;
+        else if (legacy == "ja" || legacy == "japan") options.action = Action::help_ja;
     }
 
-    void readyCommand(const int argc, char *argv[]) {
-        CommonsInit::TestAllCommons(true);
-        if (argc < 3) {
-            Mcat::ready();
-            return;
+    if (options.action == Action::none) {
+        enum LongOnly { help_zh = 1000, help_ja, list_devices, record_once };
+        static const option long_options[] = {
+            {"help", no_argument, nullptr, 'h'},
+            {"version", no_argument, nullptr, 'v'},
+            {"record", no_argument, nullptr, 'r'},
+            {"record-once", no_argument, nullptr, record_once},
+            {"output", required_argument, nullptr, 'o'},
+            {"device", required_argument, nullptr, 'd'},
+            {"status", no_argument, nullptr, 's'},
+            {"test", no_argument, nullptr, 't'},
+            {"log", no_argument, nullptr, 'l'},
+            {"zh", no_argument, nullptr, help_zh},
+            {"ja", no_argument, nullptr, help_ja},
+            {"list-devices", no_argument, nullptr, list_devices},
+            {nullptr, 0, nullptr, 0}
+        };
+
+        opterr = 0;
+        int option = 0;
+        while ((option = getopt_long(argc, argv, "hvro:d:stl", long_options, nullptr)) != -1) {
+            bool selected = false;
+            switch (option) {
+                case 'h': selected = select_action(options, Action::help); break;
+                case 'v': selected = select_action(options, Action::version); break;
+                case 'r': selected = select_action(options, Action::record); break;
+                case record_once: selected = select_action(options, Action::record_once); break;
+                case 'o': selected = select_action(options, Action::output, optarg); break;
+                case 'd': selected = select_action(options, Action::device, optarg); break;
+                case 's': selected = select_action(options, Action::status); break;
+                case 't': selected = select_action(options, Action::test); break;
+                case 'l': selected = select_action(options, Action::log); break;
+                case help_zh: selected = select_action(options, Action::help_zh); break;
+                case help_ja: selected = select_action(options, Action::help_ja); break;
+                case list_devices: selected = select_action(options, Action::list_devices); break;
+                default:
+                    std::cerr << "mcat: unknown or incomplete command\n";
+                    return EXIT_FAILURE;
+            }
+            if (!selected) {
+                std::cerr << "mcat: specify exactly one command per invocation\n";
+                return EXIT_FAILURE;
+            }
         }
-
-        const std::string outputPath = argv[2];
-
-        Mcat::ready();
-    }
-
-    void outputCommand(const int argc, char *argv[]) {
-        CommonsInit::TestAllCommons(false);
-        if (argc < 3) {
-            std::cerr << "mcat: usage: mcat -o <outputPath>\n";
-            return;
+        if (optind != argc) {
+            std::cerr << "mcat: unexpected positional argument: " << argv[optind] << '\n';
+            return EXIT_FAILURE;
         }
-        Mcat::setOutput(argv[2]);
     }
 
-    void virtualDeviceCommand(const int argc, char *argv[]) {
-        CommonsInit::TestAllCommons(false);
-        if (argc < 3) {
-            std::cerr << "mcat: usage: mcat -vd <available virtual device>\n";
-            return;
-        }
-        Mcat::setVirtualDevice(argv[2]);
+    if (options.action == Action::none) {
+        musiccat::print_logo_and_version();
+        return EXIT_FAILURE;
+    }
+    if (options.action == Action::help) {
+        musiccat::print_help();
+        return EXIT_SUCCESS;
+    }
+    if (options.action == Action::help_zh) {
+        musiccat::print_help_zh();
+        return EXIT_SUCCESS;
+    }
+    if (options.action == Action::help_ja) {
+        musiccat::print_help_ja();
+        return EXIT_SUCCESS;
+    }
+    if (options.action == Action::version) {
+        musiccat::print_logo_and_version();
+        return EXIT_SUCCESS;
     }
 
-    void versionCommand() {
-        CommonsInit::TestAllCommons(false);
-        const std::string version = MCAT_VERSION;
-        std::cout << kAppName << " " << version << std::endl;
+    musiccat::Config config = musiccat::load_config();
+    musiccat::Logger logger(musiccat::log_path());
+    switch (options.action) {
+        case Action::record:
+            musiccat::run_service(config, logger, false);
+            break;
+        case Action::record_once:
+            musiccat::run_service(config, logger, true);
+            break;
+        case Action::output:
+            config.output = *options.value;
+            musiccat::save_config(config);
+            std::cout << "Output: " << config.output << '\n';
+            break;
+        case Action::device:
+            config.device = *options.value;
+            musiccat::save_config(config);
+            std::cout << "Device: " << config.device << '\n';
+            break;
+        case Action::status:
+            musiccat::print_status(config);
+            break;
+        case Action::list_devices:
+            musiccat::list_audio_devices();
+            break;
+        case Action::test:
+            musiccat::run_diagnostics(config, logger);
+            break;
+        case Action::log:
+            logger.print_tail();
+            break;
+        default:
+            return EXIT_FAILURE;
     }
-
-    void logCommand() {
-        CommonsInit::TestAllCommons(false);
-        Mcat::printLog();
-    }
+    return EXIT_SUCCESS;
+}
 
 } // namespace
 
-
-void help() {
-    std::cout << "MusicCat - Apple Music recording CLI\n\n";
-
-    std::cout << "Usage:\n";
-    std::cout << "  mcat <command> [options]\n\n";
-
-    std::cout << "Commands:\n";
-    std::cout << "  ready                Start the Apple Music recording listener\n";
-    std::cout << "  log                  Print runtime logs\n";
-    std::cout << "  help                 Show this help message\n";
-    std::cout << "  zh                   Show Chinese help\n";
-    std::cout << "  ja                   Show Japanese help\n\n";
-
-    std::cout << "Options:\n";
-    std::cout << "  -o <path>            Set output directory\n";
-    std::cout << "  -vd <device>         Set virtual audio device\n";
-    std::cout << "  -h, --help           Show help message\n";
-    std::cout << "  -v, --version        Show program version\n";
-}
-
-void helpZh() {
-    std::cout << "MusicCat - Apple Music 自动录音工具\n\n";
-
-    std::cout << "用法:\n";
-    std::cout << "  mcat <命令> [参数]\n\n";
-
-    std::cout << "命令:\n";
-    std::cout << "  ready                启动 Apple Music 监听并自动录音\n";
-    std::cout << "  log                  查看运行日志\n";
-    std::cout << "  help                 显示英文帮助\n";
-    std::cout << "  zh                   显示中文帮助\n";
-    std::cout << "  ja                   显示日文帮助\n\n";
-
-    std::cout << "参数:\n";
-    std::cout << "  -o <路径>            设置输出目录\n";
-    std::cout << "  -vd <设备名>         设置虚拟音频设备\n";
-    std::cout << "  -h, --help           显示帮助信息\n";
-    std::cout << "  -v, --version        显示版本号\n";
-}
-
-void helpJa() {
-    std::cout << "MusicCat - Apple Music 自動録音ツール\n\n";
-
-    std::cout << "使い方:\n";
-    std::cout << "  mcat <コマンド> [オプション]\n\n";
-
-    std::cout << "コマンド:\n";
-    std::cout << "  ready                Apple Music を監視して自動録音を開始\n";
-    std::cout << "  log                  実行ログを表示\n";
-    std::cout << "  help                 英語ヘルプを表示\n";
-    std::cout << "  zh                   中国語ヘルプを表示\n";
-    std::cout << "  ja                   日本語ヘルプを表示\n\n";
-
-    std::cout << "オプション:\n";
-    std::cout << "  -o <path>            出力ディレクトリを設定\n";
-    std::cout << "  -vd <device>         仮想オーディオデバイスを設定\n";
-    std::cout << "  -h, --help           ヘルプを表示\n";
-    std::cout << "  -v, --version        バージョンを表示\n";
-}
-
-
-int main(const int argc, char *argv[]) {
-
-    std::signal(SIGINT, signalHandler); // Ctrl + C
-    std::signal(SIGTERM, signalHandler); // kill
-    // std::signal(SIGHUP, signalHandler);
-
-    if (argc < 2) {
-        help();
-        return 0;
+int main(int argc, char* argv[]) {
+    try {
+        return cli_entry(argc, argv);
+    } catch (const std::exception& error) {
+        std::cerr << "mcat: " << error.what() << '\n';
+        return EXIT_FAILURE;
+    } catch (...) {
+        std::cerr << "mcat: unknown fatal error.\n";
+        return EXIT_FAILURE;
     }
-
-    const std::string cmd = argv[1];
-
-    if (cmd == "help"
-        || cmd == "-h"
-        || cmd == "--help"
-        || cmd == "--zh"
-        || cmd == "zh"
-        || cmd == "ja"
-        || cmd == "--ja"
-    ) {
-        if (cmd == "zh" || cmd == "--zh")
-            helpZh();
-        else if (cmd == "ja" || cmd == "--ja" || cmd == "japan")
-            helpJa();
-        else
-            help();
-        return 0;
-    }
-
-    if (cmd == "ready") {
-        readyCommand(argc, argv);
-        return 0;
-    }
-
-
-    if (cmd == "-o" || cmd == "-output" || cmd == "-opf") {
-        outputCommand(argc, argv);
-        return 0;
-    }
-
-    if (cmd == "-vd" || cmd == "-virtualDevice" || cmd == "-d") {
-        virtualDeviceCommand(argc, argv);
-        return 0;
-    }
-
-    if (cmd == "-ver" || cmd == "-version" || cmd == "--version" || cmd == "-v") {
-        versionCommand();
-        return 0;
-    }
-
-    if (cmd == "log") {
-        logCommand();
-        return 0;
-    }
-
-    printUnknownCommand(cmd);
-    return 1;
 }
