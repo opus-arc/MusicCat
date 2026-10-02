@@ -68,8 +68,8 @@ int main() {
         musiccat::CaptureStateMachine state;
         auto streaming = playing(0.2, origin);
         streaming.metadata.source_path.clear();
-        require(state.observe(streaming).kind == musiccat::DecisionKind::none,
-                "a streaming-only track is ignored");
+        require(state.observe(streaming).kind == musiccat::DecisionKind::start,
+                "a clean streaming track beginning is accepted without a local source");
     }
 
     {

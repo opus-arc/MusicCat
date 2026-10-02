@@ -93,6 +93,28 @@ int main() {
     require(composer.find("Background Metadata") != std::string::npos,
             "apply metadata returned by the background enrichment task");
 
+    const auto streaming_raw = root / "streaming-candidate.flac";
+    require(std::system(("ffmpeg -v error -y -i " + quote(source) +
+                         " -af 'adelay=1000:all=1,apad=pad_dur=1' -c:a flac -sample_fmt s32 " +
+                         quote(streaming_raw)).c_str()) == 0,
+            "generate a capture without a local source reference");
+    musiccat::Processor streaming_processor(config, logger);
+    musiccat::ProcessingJob streaming;
+    streaming.metadata.id = "streaming-id";
+    streaming.metadata.title = "Position Aligned Track";
+    streaming.metadata.artist = "MusicCat Tests";
+    streaming.metadata.album = "Synthetic Album";
+    streaming.metadata.duration_seconds = 4.0;
+    streaming.raw_flac = streaming_raw;
+    streaming.candidate_complete = true;
+    streaming.leading_trim_seconds = 1.0;
+    streaming_processor.enqueue(std::move(streaming));
+    streaming_processor.finish();
+    require(std::filesystem::is_regular_file(album / "Position Aligned Track.m4a"),
+            "publish streaming playback using player-position alignment");
+    require(std::filesystem::is_regular_file(album / "flac" / "Position Aligned Track.flac"),
+            "archive position-aligned streaming playback as FLAC");
+
     const auto rejected_raw = root / "rejected.flac";
     const auto rejected_log = std::filesystem::path(rejected_raw.string() + ".sox.log");
     std::filesystem::copy_file(album / "flac" / "Synthetic Track.flac", rejected_raw);

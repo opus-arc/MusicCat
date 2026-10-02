@@ -31,7 +31,7 @@ namespace {
 
 constexpr char kFieldSeparator = 30;
 constexpr double kAlignmentSafetySeconds = 0.150;
-constexpr double kProtectedDownloadTailSeconds = 0.050;
+constexpr double kPositionAlignedTailSeconds = 0.050;
 
 struct CommandResult {
     int status = -1;
@@ -125,6 +125,11 @@ CommandResult run_process(const std::vector<std::string>& arguments, bool requir
         sigemptyset(&empty_mask);
         pthread_sigmask(SIG_SETMASK, &empty_mask, nullptr);
         close(pipe_fds[0]);
+        const int null_fd = open("/dev/null", O_RDONLY);
+        if (null_fd >= 0) {
+            dup2(null_fd, STDIN_FILENO);
+            if (null_fd != STDIN_FILENO) close(null_fd);
+        }
         dup2(pipe_fds[1], STDOUT_FILENO);
         dup2(pipe_fds[1], STDERR_FILENO);
         close(pipe_fds[1]);
@@ -650,7 +655,7 @@ Decision CaptureStateMachine::observe(const Snapshot& snapshot) {
         if (!snapshot.music_running || snapshot.state != PlayerState::playing) return {};
         const auto& metadata = snapshot.metadata;
         if (metadata.title.empty() || metadata.artist.empty() || metadata.album.empty() ||
-            metadata.duration_seconds <= 5.0 || metadata.source_path.empty() ||
+            metadata.duration_seconds <= 5.0 ||
             snapshot.position_seconds < 0.0 ||
             snapshot.position_seconds > policy_.start_window_seconds) {
             return {};
@@ -900,8 +905,10 @@ void Recorder::start(const std::string& device, const std::filesystem::path& out
         sigset_t empty_mask;
         sigemptyset(&empty_mask);
         pthread_sigmask(SIG_SETMASK, &empty_mask, nullptr);
+        const int input_fd = open("/dev/null", O_RDONLY);
         const int null_fd = open("/dev/null", O_WRONLY);
         const int log_fd = open(log.c_str(), O_CREAT | O_WRONLY | O_TRUNC, 0644);
+        if (input_fd >= 0) dup2(input_fd, STDIN_FILENO);
         if (null_fd >= 0) dup2(null_fd, STDOUT_FILENO);
         if (log_fd >= 0) dup2(log_fd, STDERR_FILENO);
         execlp("sox", "sox", "--buffer", "131072", "-V1", "-t", "coreaudio", device.c_str(),
@@ -916,7 +923,6 @@ void Recorder::start(const std::string& device, const std::filesystem::path& out
         pid_ = -1;
         throw std::runtime_error("SoX could not open the configured device; see " + log);
     }
-    logger_.info("Recording started (SoX PID " + std::to_string(pid_) + ")");
 }
 
 void Recorder::stop() {
@@ -928,7 +934,6 @@ void Recorder::stop() {
         const pid_t result = waitpid(child, &status, WNOHANG);
         if (result == child || (result < 0 && errno == ECHILD)) {
             pid_ = -1;
-            logger_.info("Recording stopped");
             return;
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
@@ -1048,13 +1053,9 @@ void Processor::process(ProcessingJob job) {
         logger_.warn("Rejected recording retained for inspection: " + destination.string() + " (" + reason + ")");
     };
 
+    try {
     if (!job.candidate_complete) {
         quarantine(job.disposition_reason);
-        return;
-    }
-
-    if (job.metadata.source_path.empty() || !std::filesystem::exists(job.metadata.source_path)) {
-        quarantine("track is not downloaded to this Mac");
         return;
     }
 
@@ -1071,17 +1072,17 @@ void Processor::process(ProcessingJob job) {
                          " s, envelope " + std::to_string(alignment.envelope_score) +
                          ", waveform " + std::to_string(alignment.waveform_score));
         } catch (const std::exception& exception) {
-            logger_.warn("Downloaded file could not be decoded for correlation; using protected-download alignment: " +
+            logger_.warn("Local source could not be decoded for correlation; using player-position alignment: " +
                          std::string(exception.what()));
         }
     }
     if (!source_correlated && job.leading_trim_seconds) {
         leading_trim = *job.leading_trim_seconds;
-        target_duration += kProtectedDownloadTailSeconds;
-        logger_.info("Protected download alignment: trim " + std::to_string(leading_trim) +
+        target_duration += kPositionAlignedTailSeconds;
+        logger_.info("Player-position alignment: trim " + std::to_string(leading_trim) +
                      " s with conservative tail padding");
     } else if (!source_correlated) {
-        quarantine("protected download could not be aligned");
+        quarantine("playback beginning could not be aligned");
         return;
     }
 
@@ -1212,6 +1213,25 @@ void Processor::process(ProcessingJob job) {
     if (job.artwork) std::filesystem::remove(*job.artwork, error);
     logger_.info("Saved: " + final_m4a.string());
     logger_.info("Lossless archive: " + final_flac.string());
+    } catch (const std::exception& exception) {
+        if (std::filesystem::is_regular_file(job.raw_flac)) {
+            try {
+                quarantine("post-processing failed: " + std::string(exception.what()));
+            } catch (...) {
+                logger_.error("Post-processing failed and the raw capture could not be moved out of .mcat-work");
+            }
+        }
+        throw;
+    } catch (...) {
+        if (std::filesystem::is_regular_file(job.raw_flac)) {
+            try {
+                quarantine("unknown post-processing failure");
+            } catch (...) {
+                logger_.error("Post-processing failed and the raw capture could not be moved out of .mcat-work");
+            }
+        }
+        throw;
+    }
 }
 
 std::filesystem::path config_path() {
@@ -1357,7 +1377,8 @@ void print_help() {
 
     Notes:
       Specify exactly one command per invocation.
-      Only tracks downloaded in Apple Music are eligible for recording.
+      Downloading first is recommended, but not required. MusicCat does not
+      repair or splice network interruptions.
       Press Ctrl-C to stop the recording service cleanly.
       Short observation failures are tolerated. Incomplete, paused, stalled,
       or seeked captures are isolated in Mcat Library/.Rejected rather than
@@ -1393,7 +1414,7 @@ void print_help_zh() {
           --zh                  显示中文帮助
           --ja                  显示日文帮助
 
-    仅录制已在 Apple Music 下载到本机的曲目。
+    建议先在 Apple Music 下载曲目，但并非强制；程序不会修复或拼接网络中断。
     每次只能指定一个命令。Ctrl-C 会安全结束服务。
     短暂查询失败会容忍；暂停、卡顿、跳播或不完整录音会被隔离到
     Mcat Library/.Rejected，不会混入可用数据集。
@@ -1418,7 +1439,8 @@ void print_help_ja() {
     -h, --help                英語ヘルプを表示
     -v, --version             logo とバージョンを表示
 
-    Apple Music でダウンロード済みの曲だけを録音します。
+    事前ダウンロードを推奨しますが必須ではありません。
+    ネットワーク中断の修復や音声の継ぎ合わせは行いません。
 
 )";
 }
@@ -1441,7 +1463,8 @@ void print_status(const Config& config) {
             std::cout << "Track:  " << value.metadata.title << " — " << value.metadata.artist << '\n';
             std::cout << "At:     " << std::fixed << std::setprecision(2) << value.position_seconds
                       << " / " << value.metadata.duration_seconds << " s\n";
-            std::cout << "Local:  " << (value.metadata.source_path.empty() ? "no (ignored)" : "yes") << '\n';
+            std::cout << "Local source reference: "
+                      << (value.metadata.source_path.empty() ? "no (position alignment)" : "yes") << '\n';
         }
     }
 }
@@ -1522,7 +1545,7 @@ void run_service(const Config& config, Logger& logger, bool stop_after_first_att
 
     preflight(config, logger, false, false);
     print_logo_and_version();
-    logger.info("MusicCat is listening. Play a downloaded Apple Music track from its beginning (Ctrl-C exits).");
+    logger.info("MusicCat is listening. Play an Apple Music track from its beginning (Ctrl-C exits).");
     logger.info("Output: " + config.output.string());
     logger.info("Device: " + config.device);
 
@@ -1542,16 +1565,16 @@ void run_service(const Config& config, Logger& logger, bool stop_after_first_att
     std::optional<std::chrono::steady_clock::time_point> active_started_at;
     std::optional<std::filesystem::path> armed_path;
     std::optional<std::chrono::steady_clock::time_point> armed_started_at;
-    std::string ignored_stream_id;
+    std::string advised_stream_id;
     std::exception_ptr service_error;
 
-    const auto arm_recorder = [&] {
+    const auto arm_recorder = [&](bool announce) {
         Metadata standby;
         standby.title = "standby";
         armed_path = make_work_path(config, standby);
         armed_started_at = std::chrono::steady_clock::now();
         recorder.start(config.device, *armed_path);
-        logger.info("Pre-roll capture armed");
+        if (announce) logger.info("Capture device armed; waiting for a track beginning.");
     };
     const auto discard_armed_capture = [&] {
         if (!armed_path) return;
@@ -1563,7 +1586,7 @@ void run_service(const Config& config, Logger& logger, bool stop_after_first_att
     };
 
     try {
-        arm_recorder();
+        arm_recorder(true);
         while (!service_stop.stop_requested()) {
             processor.rethrow_if_failed();
             if (!recorder.running()) {
@@ -1585,12 +1608,12 @@ void run_service(const Config& config, Logger& logger, bool stop_after_first_att
             }
             if (!active_job && snapshot.query_ok && snapshot.state == PlayerState::playing &&
                 !snapshot.metadata.id.empty() && snapshot.metadata.source_path.empty() &&
-                snapshot.metadata.id != ignored_stream_id) {
-                ignored_stream_id = snapshot.metadata.id;
-                logger.warn("Ignoring streaming-only track: " + snapshot.metadata.title +
-                            " — download it in Apple Music before recording");
+                snapshot.metadata.id != advised_stream_id && snapshot.position_seconds <= 1.5) {
+                advised_stream_id = snapshot.metadata.id;
+                logger.warn("No local source reference for " + snapshot.metadata.title +
+                            "; recording is allowed, but downloading first is recommended");
             } else if (!snapshot.metadata.source_path.empty()) {
-                ignored_stream_id.clear();
+                advised_stream_id.clear();
             }
             const Decision decision = state.observe(snapshot);
 
@@ -1625,20 +1648,21 @@ void run_service(const Config& config, Logger& logger, bool stop_after_first_att
                 armed_started_at.reset();
                 active_job->candidate_complete = decision.kind == DecisionKind::complete;
                 active_job->disposition_reason = decision.reason;
+                logger.info("Processing: " + active_job->metadata.title);
                 processor.enqueue(std::move(*active_job));
                 active_job.reset();
                 active_started_at.reset();
                 if (stop_after_first_attempt) {
                     service_stop.request_stop();
                 } else {
-                    arm_recorder();
+                    arm_recorder(false);
                 }
             } else if (!active_job && snapshot.query_ok &&
                        snapshot.state != PlayerState::playing && armed_started_at &&
                        snapshot.observed_at - *armed_started_at > std::chrono::seconds(15)) {
                 recorder.stop();
                 discard_armed_capture();
-                arm_recorder();
+                arm_recorder(false);
             }
 
             std::this_thread::sleep_for(std::chrono::milliseconds(350));
@@ -1670,8 +1694,11 @@ void run_service(const Config& config, Logger& logger, bool stop_after_first_att
         if (!service_error) service_error = std::current_exception();
     }
 
+    if (service_error) {
+        logger.error("MusicCat stopped because recording or post-processing failed.");
+        std::rethrow_exception(service_error);
+    }
     logger.info("MusicCat stopped cleanly.");
-    if (service_error) std::rethrow_exception(service_error);
 }
 
 } // namespace musiccat

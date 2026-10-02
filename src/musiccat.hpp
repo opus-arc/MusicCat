@@ -15,7 +15,7 @@
 
 namespace musiccat {
 
-inline constexpr const char* kVersion = "0.2.0";
+inline constexpr const char* kVersion = "0.2.1";
 
 struct Metadata {
     std::string id;

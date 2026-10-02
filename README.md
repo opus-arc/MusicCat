@@ -20,18 +20,18 @@ deterministic state machine.
 - Separate one-shot rich-metadata and artwork reads so network metadata cannot
   block the real-time monitoring loop
 - Explicit recording outcomes:
-  - only tracks downloaded in Apple Music are eligible; streaming-only tracks
-    are ignored rather than admitted into the DSP dataset
+  - local downloads are recommended but not mandatory; when no local reference
+    is available, MusicCat records without trying to repair network playback
   - brief Apple Music observation failures at startup are tolerated
   - mid-track starts are ignored
   - confirmed pause, seek, prolonged stall, early track change, or app exit
     rejects only the affected recording and keeps the service usable
   - missing tools, an unusable device, an unwritable output, an unexpected SoX
     exit, or failed post-processing is a fatal error
-- Download-aware pre-roll alignment: ordinary local audio files use envelope
-  plus waveform correlation to locate the Apple Music output exactly; protected
-  Apple Music `.movpkg` downloads use repeated position observations with
-  conservative head/tail padding and never rely on network timing
+- Source-aware pre-roll alignment: ordinary local audio files use envelope
+  plus waveform correlation to locate the Apple Music output exactly; other
+  playback uses repeated player-position observations with conservative
+  head/tail padding and never predicts network latency
 - Natural-end drain: capture remains open briefly after the player reports the
   end so CoreAudio can flush the final buffered samples before validation
 - A bounded background post-processing queue with error propagation
@@ -85,10 +85,12 @@ The executable is **build/mcat**.
     mcat --help
     mcat --version
 
-Download a track in Apple Music first, run **mcat --record**, then play that
-track from its beginning. MusicCat stays idle when Music is stopped, ignores
-streaming-only tracks and tracks already in progress, and continues listening
-after a rejected attempt. Press Ctrl-C to stop cleanly. For decodable local
+For the most reliable capture, download the album in Apple Music first. Run
+**mcat --record**, then play a track from its beginning. Downloads are not
+mandatory: MusicCat also accepts streaming playback, but it does not conceal,
+repair, or splice network interruptions. It stays idle when Music is stopped,
+ignores tracks already in progress, and continues listening after a rejected
+attempt. Press Ctrl-C to stop cleanly. For decodable local
 files, the file is used only as a correlation reference; protected `.movpkg`
 packages remain inside Music. In both cases the saved FLAC and M4A contain the
 captured CoreAudio output.
@@ -133,8 +135,8 @@ errors:
 | Situation | Result |
 | --- | --- |
 | Apple Music not running or first observed after 0.75 s | Keep listening |
-| Track is not downloaded to this Mac | Ignore it and explain why in the log |
-| Downloaded track starts cleanly | Record pre-roll; correlate a normal file or conservatively align a protected package |
+| Track has no local source reference | Record it using player-position alignment and recommend downloading first |
+| Track starts cleanly | Record pre-roll; correlate a normal file when available or use player-position alignment |
 | A few timed-out Music queries | Continue the current attempt |
 | Confirmed pause, seek, long stall, early switch, or app exit | Stop and isolate that capture |
 | Natural end followed by pause or the next track | Validate and publish |
