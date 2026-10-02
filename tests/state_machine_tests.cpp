@@ -54,8 +54,11 @@ int main() {
                 "normal playback continues");
         require(state.observe(playing(58.2, origin + std::chrono::seconds(58))).kind == musiccat::DecisionKind::none,
                 "near-end playback remains active");
-        require(state.observe(playing(0.2, origin + std::chrono::seconds(59), "track-b")).kind == musiccat::DecisionKind::complete,
+        const auto next_track = playing(0.2, origin + std::chrono::seconds(59), "track-b");
+        require(state.observe(next_track).kind == musiccat::DecisionKind::complete,
                 "a near-end track change completes the capture");
+        require(state.observe(next_track).kind == musiccat::DecisionKind::start,
+                "the same boundary snapshot immediately starts the next track");
     }
 
     {

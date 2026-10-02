@@ -13,6 +13,7 @@
 #include <iostream>
 #include <limits>
 #include <map>
+#include <memory>
 #include <numeric>
 #include <sstream>
 #include <stdexcept>
@@ -1559,46 +1560,84 @@ void run_service(const Config& config, Logger& logger, bool stop_after_first_att
 
     AppleMusicClient music;
     CaptureStateMachine state;
-    Recorder recorder(logger);
     Processor processor(config, logger);
+
+    struct CaptureSlot {
+        std::unique_ptr<Recorder> recorder;
+        std::filesystem::path path;
+        std::chrono::steady_clock::time_point started_at;
+    };
+
+    std::optional<CaptureSlot> capture;
+    std::optional<CaptureSlot> reserve;
     std::optional<ProcessingJob> active_job;
-    std::optional<std::chrono::steady_clock::time_point> active_started_at;
-    std::optional<std::filesystem::path> armed_path;
-    std::optional<std::chrono::steady_clock::time_point> armed_started_at;
     std::string advised_stream_id;
     std::exception_ptr service_error;
 
-    const auto arm_recorder = [&](bool announce) {
+    const auto start_slot = [&]() {
         Metadata standby;
         standby.title = "standby";
-        armed_path = make_work_path(config, standby);
-        armed_started_at = std::chrono::steady_clock::now();
-        recorder.start(config.device, *armed_path);
-        if (announce) logger.info("Capture device armed; waiting for a track beginning.");
+        CaptureSlot slot;
+        slot.recorder = std::make_unique<Recorder>(logger);
+        slot.path = make_work_path(config, standby);
+        slot.started_at = std::chrono::steady_clock::now();
+        slot.recorder->start(config.device, slot.path);
+        return slot;
     };
-    const auto discard_armed_capture = [&] {
-        if (!armed_path) return;
+
+    const auto discard_slot = [](CaptureSlot& slot) {
+        if (slot.recorder && slot.recorder->running()) slot.recorder->stop();
         std::error_code error;
-        std::filesystem::remove(*armed_path, error);
-        std::filesystem::remove(armed_path->string() + ".sox.log", error);
-        armed_path.reset();
-        armed_started_at.reset();
+        std::filesystem::remove(slot.path, error);
+        std::filesystem::remove(slot.path.string() + ".sox.log", error);
+    };
+
+    const auto prepare_job = [&](const Decision& decision, const CaptureSlot& slot,
+                                 const Snapshot& snapshot) {
+        if (!decision.metadata) throw std::runtime_error("track-start decision has no metadata");
+        ProcessingJob job;
+        job.metadata = *decision.metadata;
+        job.raw_flac = slot.path;
+        if (snapshot.state == PlayerState::playing &&
+            snapshot.metadata.id == job.metadata.id && snapshot.position_seconds >= 0.0 &&
+            snapshot.position_seconds <= 5.0) {
+            const double elapsed =
+                std::chrono::duration<double>(snapshot.observed_at - slot.started_at).count();
+            job.leading_trim_seconds = std::max(
+                0.0, elapsed - snapshot.position_seconds - kAlignmentSafetySeconds);
+        }
+        const Metadata base_metadata = job.metadata;
+        const auto artwork_path = std::filesystem::path(job.raw_flac.string() + ".artwork");
+        job.enrichment = std::async(std::launch::async,
+            [base_metadata, artwork_path] {
+                AppleMusicClient background_music;
+                ProcessingJob::Enrichment result;
+                result.metadata = background_music.enrich_metadata(base_metadata);
+                result.artwork = background_music.export_artwork(
+                    result.metadata, artwork_path, &result.artwork_error);
+                return result;
+            });
+        return job;
     };
 
     try {
-        arm_recorder(true);
+        capture = start_slot();
+        logger.info("Capture device armed; waiting for a track beginning.");
         while (!service_stop.stop_requested()) {
             processor.rethrow_if_failed();
-            if (!recorder.running()) {
+            if (!capture || !capture->recorder->running()) {
                 throw std::runtime_error("SoX exited unexpectedly while capture was armed");
             }
+            if (reserve && !reserve->recorder->running()) {
+                throw std::runtime_error("SoX exited unexpectedly while the transition reserve was armed");
+            }
             const Snapshot snapshot = music.snapshot();
-            if (active_job && active_started_at &&
+            if (active_job && capture &&
                 snapshot.query_ok && snapshot.state == PlayerState::playing &&
                 snapshot.metadata.id == active_job->metadata.id && snapshot.position_seconds >= 0.1 &&
                 snapshot.position_seconds <= 5.0) {
                 const double elapsed =
-                    std::chrono::duration<double>(snapshot.observed_at - *active_started_at).count();
+                    std::chrono::duration<double>(snapshot.observed_at - capture->started_at).count();
                 const double candidate = std::max(
                     0.0, elapsed - snapshot.position_seconds - kAlignmentSafetySeconds);
                 if (!active_job->leading_trim_seconds ||
@@ -1618,51 +1657,52 @@ void run_service(const Config& config, Logger& logger, bool stop_after_first_att
             const Decision decision = state.observe(snapshot);
 
             if (decision.kind == DecisionKind::start && decision.metadata) {
-                if (!armed_path || !armed_started_at) {
-                    throw std::runtime_error("capture device was not armed at the track beginning");
-                }
-                ProcessingJob job;
-                job.metadata = *decision.metadata;
-                job.raw_flac = *armed_path;
-                active_started_at = *armed_started_at;
-                const Metadata base_metadata = job.metadata;
-                const auto artwork_path = std::filesystem::path(job.raw_flac.string() + ".artwork");
-                job.enrichment = std::async(std::launch::async,
-                    [base_metadata, artwork_path] {
-                        AppleMusicClient background_music;
-                        ProcessingJob::Enrichment result;
-                        result.metadata = background_music.enrich_metadata(base_metadata);
-                        result.artwork = background_music.export_artwork(
-                            result.metadata, artwork_path, &result.artwork_error);
-                        return result;
-                    });
-                active_job = std::move(job);
+                if (!capture) throw std::runtime_error("capture device was not armed at the track beginning");
+                active_job = prepare_job(decision, *capture, snapshot);
                 logger.info("Capturing: " + decision.metadata->title + " — " + decision.metadata->artist);
+                reserve = start_slot();
             } else if ((decision.kind == DecisionKind::complete || decision.kind == DecisionKind::reject) && active_job) {
+                if (!capture || !reserve) {
+                    throw std::runtime_error("transition reserve is unavailable at the track boundary");
+                }
+
+                std::optional<ProcessingJob> following_job;
+                std::optional<Metadata> following_metadata;
+                if (!stop_after_first_attempt) {
+                    const Decision following = state.observe(snapshot);
+                    if (following.kind == DecisionKind::start && following.metadata) {
+                        following_job = prepare_job(following, *reserve, snapshot);
+                        following_metadata = following.metadata;
+                    }
+                }
+
                 if (decision.kind == DecisionKind::complete) {
                     logger.info("Draining the CoreAudio output pipeline");
                     std::this_thread::sleep_for(std::chrono::milliseconds(600));
                 }
-                recorder.stop();
-                armed_path.reset();
-                armed_started_at.reset();
+                capture->recorder->stop();
                 active_job->candidate_complete = decision.kind == DecisionKind::complete;
                 active_job->disposition_reason = decision.reason;
                 logger.info("Processing: " + active_job->metadata.title);
                 processor.enqueue(std::move(*active_job));
                 active_job.reset();
-                active_started_at.reset();
+
+                capture = std::move(reserve);
+                reserve.reset();
+
                 if (stop_after_first_attempt) {
                     service_stop.request_stop();
-                } else {
-                    arm_recorder(false);
+                } else if (following_job && following_metadata) {
+                    active_job = std::move(*following_job);
+                    logger.info("Capturing: " + following_metadata->title + " — " +
+                                following_metadata->artist);
+                    reserve = start_slot();
                 }
             } else if (!active_job && snapshot.query_ok &&
-                       snapshot.state != PlayerState::playing && armed_started_at &&
-                       snapshot.observed_at - *armed_started_at > std::chrono::seconds(15)) {
-                recorder.stop();
-                discard_armed_capture();
-                arm_recorder(false);
+                       snapshot.state != PlayerState::playing && capture &&
+                       snapshot.observed_at - capture->started_at > std::chrono::seconds(15)) {
+                discard_slot(*capture);
+                capture = start_slot();
             }
 
             std::this_thread::sleep_for(std::chrono::milliseconds(350));
@@ -1676,18 +1716,20 @@ void run_service(const Config& config, Logger& logger, bool stop_after_first_att
     signal_waiter.join();
 
     try {
-        if (active_job) {
-            recorder.stop();
-            armed_path.reset();
-            armed_started_at.reset();
+        if (active_job && capture) {
+            if (capture->recorder->running()) capture->recorder->stop();
             active_job->candidate_complete = false;
             active_job->disposition_reason = "service stopped before track completion";
             processor.enqueue(std::move(*active_job));
             active_job.reset();
-            active_started_at.reset();
-        } else if (armed_path) {
-            if (recorder.running()) recorder.stop();
-            discard_armed_capture();
+            capture.reset();
+        } else if (capture) {
+            discard_slot(*capture);
+            capture.reset();
+        }
+        if (reserve) {
+            discard_slot(*reserve);
+            reserve.reset();
         }
         processor.finish();
     } catch (...) {

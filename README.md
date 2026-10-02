@@ -34,6 +34,9 @@ deterministic state machine.
   head/tail padding and never predicts network latency
 - Natural-end drain: capture remains open briefly after the player reports the
   end so CoreAudio can flush the final buffered samples before validation
+- Gapless album transitions: a second CoreAudio capture is pre-armed while the
+  current track is playing, so stopping and processing one track cannot miss
+  the beginning of the next
 - A bounded background post-processing queue with error propagation
 - Non-destructive rejection: unsuitable captures are moved to
   **Mcat Library/.Rejected** and never mixed into the usable dataset
