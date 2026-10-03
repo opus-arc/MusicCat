@@ -15,7 +15,7 @@
 
 namespace musiccat {
 
-inline constexpr const char* kVersion = "0.2.4";
+inline constexpr const char* kVersion = "0.3.0";
 
 struct Metadata {
     std::string id;
@@ -186,6 +186,7 @@ void print_help();
 void print_help_zh();
 void print_help_ja();
 void print_status(const Config& config);
+void print_model_status();
 void list_audio_devices();
 void preflight(const Config& config, Logger& logger, bool probe_device,
                bool require_music_access);

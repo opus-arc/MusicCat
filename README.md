@@ -6,9 +6,29 @@ captures eligible playback through a CoreAudio virtual device, validates the
 recording, embeds metadata and artwork, and preserves MusicCat's album-oriented
 library layout.
 
-The 0.2 series is a ground-up rewrite. The logo and the original **Mcat Library**
+The 0.2 series was a ground-up rewrite. The logo and the original **Mcat Library**
 format remain; the old multi-listener recording logic has been replaced by one
 deterministic state machine.
+
+## What 0.3 adds
+
+- A fully optional two-stage notation pipeline:
+  `captured audio -> Transkun -> MIDI -> midiscribe/MIDI2ScoreTransformer -> MusicXML`
+- `<Album>/midi/<Track>.mid` is created only after Transkun succeeds.
+- `<Album>/score/<Track>.musicxml` is created only when the `midiscribe` CLI and
+  its model are installed and conversion succeeds. Missing tools or weights do
+  not create empty folders and never prevent FLAC/M4A publication.
+- MusicXML receives the Apple Music title and composer/artist metadata. MIDI
+  and MusicXML have no portable album-art attachment field, so `Cover.jpg`
+  remains the artwork source and is applied to the MIDI/score folder icons when
+  `fileicon` is available.
+- `mcat --models` reports which optional stages are ready.
+- A missing Loopback-provided capture device is detected before SoX starts and
+  now explains that Loopback must be opened before `mcat --test` is retried.
+- The companion [midiscribe](https://github.com/opus-arc/midiscribe) CLI wraps a
+  separately installed MIDI2ScoreTransformer checkout and either its complete
+  upstream checkpoint or a compatible inference-only checkpoint. MusicCat does
+  not download or redistribute the unlicensed upstream source or weights.
 
 ## What 0.2 adds
 
@@ -87,6 +107,9 @@ deterministic state machine.
   tracks and cannot produce isolated, complete per-track recordings
 - Optional: fileicon, used only to apply album artwork as the Finder folder icon
 - Optional: Transkun CLI, discovered at runtime for WAV-to-MIDI transcription
+- Optional: `midiscribe`, a separately installed MIDI2ScoreTransformer checkout,
+  and a separately downloaded model, discovered at runtime for MIDI-to-MusicXML
+  conversion
 
 MusicCat does not bypass Apple Music access controls or DRM. Use it only with
 audio you are authorized to play and capture.
@@ -104,6 +127,25 @@ the prompt was previously denied, enable Music under **System Settings → Priva
 
 The executable is **build/mcat**.
 
+### Optional model tools
+
+MusicCat does not install Python, model code, or weights automatically. A
+Python 3.11 environment may opt into Transkun with its existing package:
+
+    python3.11 -m pip install transkun
+
+Install the small CLI wrapper, then separately clone MIDI2ScoreTransformer and
+download `MIDI2ScoreTF.ckpt` from its upstream v0.0.1 release:
+
+    python3.11 -m pip install git+https://github.com/opus-arc/midiscribe.git
+    midiscribe --status
+    mcat --models
+
+Set `MIDISCRIBE_SOURCE` and `MIDISCRIBE_MODEL` when the checkout or checkpoint
+is outside the default locations. These optional downloads are never performed
+by MusicCat. Without them, MusicCat publishes audio and MIDI normally and does
+not create `score/`.
+
 ## CLI
 
     mcat --record
@@ -111,6 +153,7 @@ The executable is **build/mcat**.
     mcat --output "/path/to/output"
     mcat --device "Apple Music Virtual Device"
     mcat --status
+    mcat --models
     mcat --list-devices
     mcat --test
     mcat --log
@@ -147,6 +190,8 @@ Successful recordings retain the original MusicCat organization:
             <Track>.flac
           midi/
             <Track>.mid
+          score/
+            <Track>.musicxml
         .Rejected/
           <Track>--<reason>.flac
       .mcat-work/
@@ -156,8 +201,8 @@ Successful recordings retain the original MusicCat organization:
 - Both files receive the available Apple Music metadata and embedded artwork.
 - The first cover saved for an album becomes **Cover.jpg**; with fileicon
   installed it is also applied as the Finder folder icon and the optional MIDI
-  folder icon. Standard MIDI has no portable embedded-cover field, so the album
-  `Cover.jpg` remains its artwork source.
+  and score folder icons. Standard MIDI and MusicXML have no portable
+  embedded-cover field, so the album `Cover.jpg` remains their artwork source.
 - Name collisions use the same numbered suffix for the M4A and FLAC pair.
 - **.mcat-work** contains only in-flight material. A clean shutdown drains
   queued post-processing before returning.
@@ -177,6 +222,8 @@ errors:
 | Natural end followed by pause or the next track | Validate and publish |
 | Transkun missing | Publish audio normally and skip MIDI silently |
 | Transkun invocation fails | Keep the published audio and log a non-fatal warning |
+| midiscribe CLI or model missing | Keep audio/MIDI and do not create a score folder |
+| midiscribe conversion fails | Keep audio/MIDI and log a non-fatal warning |
 | Wrong/missing device, SoX exit, unwritable output, FFmpeg failure | Stop service with a non-zero exit |
 
 For decodable files, the acceptance gate requires strong envelope and waveform

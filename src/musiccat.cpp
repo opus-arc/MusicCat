@@ -200,6 +200,39 @@ bool executable_exists(const std::string& name) {
     return false;
 }
 
+std::vector<std::string> audio_device_names() {
+    const auto result = run_process({"ffmpeg", "-hide_banner", "-f", "avfoundation",
+                                     "-list_devices", "true", "-i", ""}, false,
+                                    std::chrono::seconds(10));
+    std::vector<std::string> devices;
+    std::istringstream lines(result.output);
+    std::string line;
+    bool audio = false;
+    while (std::getline(lines, line)) {
+        if (line.find("AVFoundation audio devices") != std::string::npos) {
+            audio = true;
+            continue;
+        }
+        if (line.find("AVFoundation video devices") != std::string::npos) {
+            audio = false;
+            continue;
+        }
+        if (!audio) continue;
+        const auto marker = line.find("] [");
+        if (marker == std::string::npos) continue;
+        const auto name_begin = line.find("] ", marker + 3);
+        if (name_begin == std::string::npos) continue;
+        const std::string name = trim(line.substr(name_begin + 2));
+        if (!name.empty()) devices.push_back(name);
+    }
+    return devices;
+}
+
+bool audio_device_available(const std::string& expected) {
+    const auto devices = audio_device_names();
+    return std::find(devices.begin(), devices.end(), expected) != devices.end();
+}
+
 bool apple_music_transitions_enabled() {
     const auto result = run_process(
         {"/usr/bin/defaults", "read", "com.apple.Music", "TransitionsEnabled"},
@@ -938,6 +971,14 @@ void Recorder::start(const std::string& device, const std::filesystem::path& out
     const pid_t result = waitpid(pid_, &status, WNOHANG);
     if (result == pid_) {
         pid_ = -1;
+        std::ifstream diagnostics(log);
+        std::string detail((std::istreambuf_iterator<char>(diagnostics)),
+                           std::istreambuf_iterator<char>());
+        if (detail.find("can not open audio device") != std::string::npos) {
+            throw std::runtime_error(
+                "CoreAudio device '" + device + "' could not be opened. If Loopback supplies "
+                "this virtual device, open Loopback first, then run mcat --test. SoX log: " + log);
+        }
         throw std::runtime_error("SoX could not open the configured device; see " + log);
     }
 }
@@ -1216,6 +1257,46 @@ void Processor::process(ProcessingJob job) {
                 }
             }
             logger_.info("MIDI transcription: " + final_midi.string());
+
+            const char* disable_score = std::getenv("MUSICCAT_DISABLE_MIDISCRIBE");
+            if (!disable_score) disable_score = std::getenv("MUSICCAT_DISABLE_MIDI2SCORE");
+            const bool score_enabled = !disable_score || std::string(disable_score) != "1";
+            const auto score_status = score_enabled && executable_exists("midiscribe")
+                ? run_process({"midiscribe", "--status"}, false, std::chrono::seconds(15))
+                : CommandResult{};
+            if (score_enabled && executable_exists("midiscribe") && score_status.status == 0) {
+                const auto transcription_score = job.raw_flac.parent_path() /
+                    (job.raw_flac.stem().string() + ".midiscribe.musicxml");
+                try {
+                    std::vector<std::string> score_args = {
+                        "midiscribe", final_midi.string(), transcription_score.string(),
+                        "--title", job.metadata.title,
+                        "--composer", job.metadata.composer,
+                        "--artist", job.metadata.artist
+                    };
+                    run_process(score_args, true, std::chrono::hours(2));
+                    if (!std::filesystem::is_regular_file(transcription_score) ||
+                        std::filesystem::file_size(transcription_score) == 0) {
+                        throw std::runtime_error("midiscribe did not create a MusicXML file");
+                    }
+                    const auto score_folder = album_folder / "score";
+                    std::filesystem::create_directories(score_folder);
+                    const auto final_score = unique_path(score_folder / (final_name + ".musicxml"));
+                    move_file(transcription_score, final_score);
+                    if (std::filesystem::is_regular_file(cover) && executable_exists("fileicon")) {
+                        const auto icon_result = run_process(
+                            {"fileicon", "set", score_folder.string(), cover.string()}, false);
+                        if (icon_result.status != 0) {
+                            logger_.warn("Could not apply the album cover to the score folder icon");
+                        }
+                    }
+                    logger_.info("Score transcription: " + final_score.string());
+                } catch (const std::exception& exception) {
+                    logger_.warn("Optional midiscribe conversion failed: " + std::string(exception.what()));
+                }
+                std::error_code score_error;
+                std::filesystem::remove(transcription_score, score_error);
+            }
         } catch (const std::exception& exception) {
             logger_.warn("Optional Transkun transcription failed: " + std::string(exception.what()));
         }
@@ -1378,6 +1459,7 @@ void print_help() {
       -o, --output <folder>     Persistently set the output root
       -d, --device <name>       Persistently set the CoreAudio capture device
       -s, --status              Show current configuration and player state
+          --models              Show optional transcription model readiness
           --list-devices        List AVFoundation audio input devices
 
     Diagnostics:
@@ -1422,6 +1504,7 @@ void print_help_zh() {
       -o, --output <目录>       持久设置输出根目录
       -d, --device <设备名>     持久设置 CoreAudio 录音设备
       -s, --status              显示配置与当前播放状态
+          --models              显示可选转录模型是否可用
           --list-devices        列出 AVFoundation 音频输入设备
 
     诊断:
@@ -1455,6 +1538,7 @@ void print_help_ja() {
     -o, --output <folder>     出力フォルダを設定
     -d, --device <name>       CoreAudio 録音デバイスを設定
     -s, --status              設定と再生状態を表示
+        --models              オプション推論モデルの状態を表示
         --list-devices        オーディオ入力デバイスを表示
     -t, --test                環境と録音デバイスを診断
     -l, --log                 最近のログを表示
@@ -1495,19 +1579,23 @@ void print_status(const Config& config) {
     }
 }
 
+void print_model_status() {
+    const bool transkun = executable_exists("transkun");
+    bool midiscribe = false;
+    if (executable_exists("midiscribe")) {
+        midiscribe = run_process(
+            {"midiscribe", "--status"}, false, std::chrono::seconds(15)).status == 0;
+    }
+    std::cout << "Transkun (WAV -> MIDI): " << (transkun ? "available" : "not installed") << '\n';
+    std::cout << "midiscribe (MIDI -> MusicXML): "
+              << (midiscribe ? "available" : "not installed or model missing") << '\n';
+    std::cout << "Audio recording remains available when either optional stage is absent.\n";
+}
+
 void list_audio_devices() {
-    const auto result = run_process({"ffmpeg", "-hide_banner", "-f", "avfoundation",
-                                     "-list_devices", "true", "-i", ""}, false);
-    std::istringstream lines(result.output);
-    std::string line;
-    bool audio = false;
-    while (std::getline(lines, line)) {
-        if (line.find("AVFoundation audio devices") != std::string::npos) {
-            audio = true;
-            continue;
-        }
-        if (line.find("AVFoundation video devices") != std::string::npos) audio = false;
-        if (audio && line.find("] [") != std::string::npos) std::cout << line << '\n';
+    const auto devices = audio_device_names();
+    for (std::size_t index = 0; index < devices.size(); ++index) {
+        std::cout << '[' << index << "] " << devices[index] << '\n';
     }
 }
 
@@ -1515,6 +1603,12 @@ void preflight(const Config& config, Logger& logger, bool probe_device,
                bool require_music_access) {
     for (const std::string tool : {"sox", "ffmpeg", "ffprobe"}) {
         if (!executable_exists(tool)) throw std::runtime_error("required tool is not executable: " + tool);
+    }
+    if (!audio_device_available(config.device)) {
+        throw std::runtime_error(
+            "configured CoreAudio input device '" + config.device +
+            "' is not currently registered. If it is a Loopback virtual device, open Loopback "
+            "first. Then run mcat --list-devices and mcat --test");
     }
     std::filesystem::create_directories(config.output);
     const auto probe = config.output / ".mcat-write-test";

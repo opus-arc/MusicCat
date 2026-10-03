@@ -11,7 +11,7 @@ namespace {
 
 enum class Action {
     none, help, help_zh, help_ja, version, record, record_once, output, device,
-    status, list_devices, test, log
+    status, models, list_devices, test, log
 };
 
 struct CliOptions {
@@ -41,7 +41,7 @@ int cli_entry(int argc, char* argv[]) {
     }
 
     if (options.action == Action::none) {
-        enum LongOnly { help_zh = 1000, help_ja, list_devices, record_once };
+        enum LongOnly { help_zh = 1000, help_ja, list_devices, record_once, models };
         static const option long_options[] = {
             {"help", no_argument, nullptr, 'h'},
             {"version", no_argument, nullptr, 'v'},
@@ -55,6 +55,7 @@ int cli_entry(int argc, char* argv[]) {
             {"zh", no_argument, nullptr, help_zh},
             {"ja", no_argument, nullptr, help_ja},
             {"list-devices", no_argument, nullptr, list_devices},
+            {"models", no_argument, nullptr, models},
             {nullptr, 0, nullptr, 0}
         };
 
@@ -75,6 +76,7 @@ int cli_entry(int argc, char* argv[]) {
                 case help_zh: selected = select_action(options, Action::help_zh); break;
                 case help_ja: selected = select_action(options, Action::help_ja); break;
                 case list_devices: selected = select_action(options, Action::list_devices); break;
+                case models: selected = select_action(options, Action::models); break;
                 default:
                     std::cerr << "mcat: unknown or incomplete command\n";
                     return EXIT_FAILURE;
@@ -132,6 +134,9 @@ int cli_entry(int argc, char* argv[]) {
             break;
         case Action::status:
             musiccat::print_status(config);
+            break;
+        case Action::models:
+            musiccat::print_model_status();
             break;
         case Action::list_devices:
             musiccat::list_audio_devices();

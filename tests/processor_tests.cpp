@@ -7,6 +7,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <sys/stat.h>
 #include <unistd.h>
 
 namespace {
@@ -87,6 +88,9 @@ int main() {
             "publish the M4A listening copy");
     require(std::filesystem::is_regular_file(album / "flac" / "Synthetic Track.flac"),
             "publish the FLAC archive");
+    require(!std::filesystem::exists(album / "midi") &&
+            !std::filesystem::exists(album / "score"),
+            "do not create optional model folders when the pipeline is disabled");
     const auto composer = command_output(
         "ffprobe -v error -show_entries format_tags=composer -of default=nk=1:nw=1 " +
         quote(album / "flac" / "Synthetic Track.flac"));
@@ -139,6 +143,49 @@ int main() {
             "retain matching recorder diagnostics beside rejected audio");
     require(!std::filesystem::exists(rejected_log),
             "move rather than orphan recorder diagnostics in the work directory");
+
+    const auto fake_bin = root / "fake-bin";
+    std::filesystem::create_directories(fake_bin);
+    const auto fake_transkun = fake_bin / "transkun";
+    const auto fake_midiscribe = fake_bin / "midiscribe";
+    {
+        std::ofstream script(fake_transkun);
+        script << "#!/bin/sh\nprintf 'MThd\\000\\000\\000\\006' > \"$2\"\n";
+    }
+    {
+        std::ofstream script(fake_midiscribe);
+        script << "#!/bin/sh\n"
+                  "if [ \"$1\" = --status ]; then exit 0; fi\n"
+                  "printf '<score-partwise version=\"4.0\"></score-partwise>' > \"$2\"\n";
+    }
+    chmod(fake_transkun.c_str(), 0755);
+    chmod(fake_midiscribe.c_str(), 0755);
+    const std::string old_path = std::getenv("PATH") ? std::getenv("PATH") : "";
+    const std::string test_path = fake_bin.string() + ":" + old_path;
+    setenv("PATH", test_path.c_str(), 1);
+    unsetenv("MUSICCAT_DISABLE_TRANSKUN");
+    unsetenv("MUSICCAT_DISABLE_MIDISCRIBE");
+    unsetenv("MUSICCAT_DISABLE_MIDI2SCORE");
+
+    const auto model_raw = root / "model-pipeline.flac";
+    std::filesystem::copy_file(album / "flac" / "Synthetic Track.flac", model_raw);
+    musiccat::Processor model_processor(config, logger);
+    musiccat::ProcessingJob model_job;
+    model_job.metadata.title = "Optional Model Track";
+    model_job.metadata.artist = "MusicCat Tests";
+    model_job.metadata.album = "Synthetic Album";
+    model_job.metadata.duration_seconds = 4.0;
+    model_job.raw_flac = model_raw;
+    model_job.candidate_complete = true;
+    model_job.leading_trim_seconds = 0.0;
+    model_processor.enqueue(std::move(model_job));
+    model_processor.finish();
+    require(std::filesystem::is_regular_file(album / "midi" / "Optional Model Track.mid"),
+            "publish optional Transkun MIDI only after a successful conversion");
+    require(std::filesystem::is_regular_file(album / "score" / "Optional Model Track.musicxml"),
+            "publish optional midiscribe MusicXML only after a successful conversion");
+    setenv("PATH", old_path.c_str(), 1);
+    setenv("MUSICCAT_DISABLE_TRANSKUN", "1", 1);
 
     const auto short_raw = root / "too-short.flac";
     std::filesystem::copy_file(album / "flac" / "Synthetic Track.flac", short_raw);
