@@ -200,6 +200,17 @@ bool executable_exists(const std::string& name) {
     return false;
 }
 
+bool apple_music_transitions_enabled() {
+    const auto result = run_process(
+        {"/usr/bin/defaults", "read", "com.apple.Music", "TransitionsEnabled"},
+        false, std::chrono::seconds(3));
+    if (result.status != 0) return false;
+    std::string value = trim(result.output);
+    std::transform(value.begin(), value.end(), value.begin(),
+                   [](unsigned char character) { return static_cast<char>(std::tolower(character)); });
+    return value == "1" || value == "true" || value == "yes";
+}
+
 void move_file(const std::filesystem::path& source, const std::filesystem::path& destination) {
     std::error_code error;
     std::filesystem::rename(source, destination, error);
@@ -1348,7 +1359,8 @@ void print_logo_and_version() {
 for mac and apple music
   background recorder
 )";
-    std::cout << "mcat " << kVersion << "\n\n";
+    std::cout << "mcat " << kVersion << "\n";
+    std::cout << "designed by Ziyang Tan\n\n";
 }
 
 void print_help() {
@@ -1385,6 +1397,8 @@ void print_help() {
       Specify exactly one command per invocation.
       Downloading first is recommended, but not required. MusicCat does not
       repair or splice network interruptions.
+      Disable Apple Music AutoMix/Crossfade before recording; overlapping
+      transitions cannot be separated into complete individual tracks.
       Press Ctrl-C to stop the recording service cleanly.
       Short observation failures are tolerated. Incomplete, paused, stalled,
       or seeked captures are isolated in Mcat Library/.Rejected rather than
@@ -1421,6 +1435,8 @@ void print_help_zh() {
           --ja                  显示日文帮助
 
     建议先在 Apple Music 下载曲目，但并非强制；程序不会修复或拼接网络中断。
+    录制前必须关闭 Apple Music 的“歌曲过渡”（自动过渡/交叉渐入渐出），
+    重叠播放的两首歌曲无法还原成完整、独立的单曲。
     每次只能指定一个命令。Ctrl-C 会安全结束服务。
     短暂查询失败会容忍；暂停、卡顿、跳播或不完整录音会被隔离到
     Mcat Library/.Rejected，不会混入可用数据集。
@@ -1508,6 +1524,12 @@ void preflight(const Config& config, Logger& logger, bool probe_device,
         output << "ok";
     }
     std::filesystem::remove(probe);
+
+    if (apple_music_transitions_enabled()) {
+        throw std::runtime_error(
+            "Apple Music song transitions are enabled; disable AutoMix/Crossfade in "
+            "Music > Settings > Playback before recording complete tracks");
+    }
 
     AppleMusicClient client;
     if (require_music_access && !client.snapshot().query_ok) {
@@ -1694,6 +1716,15 @@ void run_service(const Config& config, Logger& logger, bool stop_after_first_att
 
                 std::optional<ProcessingJob> following_job;
                 std::optional<Metadata> following_metadata;
+                if (decision.metadata && snapshot.metadata.album == decision.metadata->album &&
+                    snapshot.metadata.disc_number == decision.metadata->disc_number &&
+                    decision.metadata->track_number > 0 &&
+                    snapshot.metadata.track_number > decision.metadata->track_number + 1) {
+                    logger.warn("Apple Music playback skipped album track number(s) " +
+                                std::to_string(decision.metadata->track_number + 1) + "-" +
+                                std::to_string(snapshot.metadata.track_number - 1) +
+                                "; MusicCat can only capture tracks Apple Music actually plays");
+                }
                 // Music can briefly report the completed track at position zero before
                 // publishing the next track's metadata. Do not interpret that transient
                 // snapshot as an immediate repeat; the next poll still has the reserve's

@@ -52,6 +52,17 @@ deterministic state machine.
   `PATH`, MusicCat creates `<Album>/midi/<Track>.mid`; otherwise it does nothing
 - Compatibility aliases for **ready**, **log**, **zh**, and **ja**
 
+## 0.2.4 reliability fixes
+
+- Refuses to record while Apple Music AutoMix or Crossfade is enabled. Those
+  modes overlap adjacent songs, so the captured output cannot be separated into
+  complete, isolated tracks after the fact.
+- Warns when Apple Music's playback queue jumps over track numbers within the
+  same album instead of silently making the resulting album look complete.
+- Adds `designed by Ziyang Tan` to the CLI identity block.
+- Release executables are checked for an available Apple Developer signing
+  identity, signed when possible, and verified before publication.
+
 ## 0.2.3 reliability fixes
 
 - Replaced the fixed start-time window with a direct check that the live
@@ -72,6 +83,8 @@ deterministic state machine.
 - A CoreAudio input device that receives Apple Music's output, such as the
   default **Apple Music Virtual Device**
 - Automation permission for the terminal or host that launches mcat
+- Apple Music song transitions disabled: AutoMix and Crossfade combine adjacent
+  tracks and cannot produce isolated, complete per-track recordings
 - Optional: fileicon, used only to apply album artwork as the Finder folder icon
 - Optional: Transkun CLI, discovered at runtime for WAV-to-MIDI transcription
 
