@@ -63,8 +63,18 @@ int main() {
 
     {
         musiccat::CaptureStateMachine state;
-        require(state.observe(playing(1.0, origin)).kind == musiccat::DecisionKind::none,
-                "a late start is ignored");
+        require(state.observe(playing(3.0, origin)).kind == musiccat::DecisionKind::start,
+                "a delayed snapshot can start when the service has sufficient pre-roll");
+    }
+
+    {
+        musiccat::CaptureStateMachine state;
+        require(state.observe(playing(55.0, origin)).kind == musiccat::DecisionKind::start,
+                "the state machine does not guess a fixed observation-latency limit");
+        require(musiccat::capture_covers_track_beginning(60.0, 55.0),
+                "an armed capture that covers the actual beginning is accepted");
+        require(!musiccat::capture_covers_track_beginning(5.0, 55.0),
+                "a capture started in the middle of the track is rejected");
     }
 
     {

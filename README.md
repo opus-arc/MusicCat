@@ -23,7 +23,7 @@ deterministic state machine.
   - local downloads are recommended but not mandatory; when no local reference
     is available, MusicCat records without trying to repair network playback
   - brief Apple Music observation failures at startup are tolerated
-  - mid-track starts are ignored
+  - a track is accepted only when the armed capture actually contains its beginning
   - confirmed pause, seek, prolonged stall, early track change, or app exit
     rejects only the affected recording and keeps the service usable
   - missing tools, an unusable device, an unwritable output, an unexpected SoX
@@ -37,6 +37,10 @@ deterministic state machine.
 - Gapless album transitions: a second CoreAudio capture is pre-armed while the
   current track is playing, so stopping and processing one track cannot miss
   the beginning of the next
+- Continuous idle pre-roll: the armed recorder is never rotated through a gap
+  while Music is paused or changing state
+- An explicit pre-roll coverage check instead of a guessed query/network-delay
+  threshold, plus a visible message when the recorder did not capture the beginning
 - A bounded background post-processing queue with error propagation
 - Non-destructive rejection: unsuitable captures are moved to
   **Mcat Library/.Rejected** and never mixed into the usable dataset
@@ -47,6 +51,18 @@ deterministic state machine.
 - Silent optional Transkun integration: when a `transkun` executable is on
   `PATH`, MusicCat creates `<Album>/midi/<Track>.mid`; otherwise it does nothing
 - Compatibility aliases for **ready**, **log**, **zh**, and **ja**
+
+## 0.2.3 reliability fixes
+
+- Replaced the fixed start-time window with a direct check that the live
+  CoreAudio pre-roll covers the observed Apple Music position.
+- Removed idle capture rotation, which could restart SoX in the same instant a
+  user clicked Play and lose the opening seconds.
+- Kept the reserve recorder armed through album transitions and ignored the
+  transient `old track + position 0` snapshot Music can expose before updating
+  the next track's metadata.
+- Added a visible waiting message for a track whose beginning was not captured;
+  restarting that track or allowing the next track to begin remains automatic.
 
 ## Requirements
 
@@ -87,6 +103,9 @@ The executable is **build/mcat**.
     mcat --log
     mcat --help
     mcat --version
+
+`--output`/`-o` and `--device`/`-d` are persistent settings, stored in
+`~/Library/Application Support/MusicCat/config`; they are not one-run options.
 
 For the most reliable capture, download the album in Apple Music first. Run
 **mcat --record**, then play a track from its beginning. Downloads are not
@@ -137,7 +156,7 @@ errors:
 
 | Situation | Result |
 | --- | --- |
-| Apple Music not running or first observed after 0.75 s | Keep listening |
+| Apple Music not running or the beginning is absent from pre-roll | Explain that it is waiting for the next track or a restart |
 | Track has no local source reference | Record it using player-position alignment and recommend downloading first |
 | Track starts cleanly | Record pre-roll; correlate a normal file when available or use player-position alignment |
 | A few timed-out Music queries | Continue the current attempt |

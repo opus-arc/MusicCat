@@ -15,7 +15,7 @@
 
 namespace musiccat {
 
-inline constexpr const char* kVersion = "0.2.2";
+inline constexpr const char* kVersion = "0.2.3";
 
 struct Metadata {
     std::string id;
@@ -56,7 +56,7 @@ struct Decision {
 };
 
 struct Policy {
-    double start_window_seconds = 0.75;
+    double restart_window_seconds = 5.0;
     double end_window_seconds = 3.0;
     double stall_grace_seconds = 2.5;
     double startup_buffer_grace_seconds = 30.0;
@@ -65,6 +65,9 @@ struct Policy {
     double unavailable_grace_seconds = 30.0;
     int paused_grace_samples = 2;
 };
+
+bool capture_covers_track_beginning(double available_preroll_seconds,
+                                    double player_position_seconds) noexcept;
 
 class CaptureStateMachine {
 public:

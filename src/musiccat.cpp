@@ -638,6 +638,12 @@ Decision finish_decision(DecisionKind kind, const std::string& reason, const std
 
 CaptureStateMachine::CaptureStateMachine(Policy policy) : policy_(policy) {}
 
+bool capture_covers_track_beginning(double available_preroll_seconds,
+                                    double player_position_seconds) noexcept {
+    return player_position_seconds >= 0.0 &&
+           available_preroll_seconds >= player_position_seconds + kAlignmentSafetySeconds;
+}
+
 Decision CaptureStateMachine::observe(const Snapshot& snapshot) {
     if (!snapshot.query_ok) {
         if (!unavailable_since_) unavailable_since_ = snapshot.observed_at;
@@ -657,8 +663,7 @@ Decision CaptureStateMachine::observe(const Snapshot& snapshot) {
         const auto& metadata = snapshot.metadata;
         if (metadata.title.empty() || metadata.artist.empty() || metadata.album.empty() ||
             metadata.duration_seconds <= 5.0 ||
-            snapshot.position_seconds < 0.0 ||
-            snapshot.position_seconds > policy_.start_window_seconds) {
+            snapshot.position_seconds < 0.0) {
             return {};
         }
         current_ = metadata;
@@ -703,7 +708,7 @@ Decision CaptureStateMachine::observe(const Snapshot& snapshot) {
         if (backward_seek || forward_seek) {
             if (backward_seek && last_good_->position_seconds >=
                     current_->duration_seconds - policy_.end_window_seconds &&
-                snapshot.position_seconds <= policy_.start_window_seconds) {
+                snapshot.position_seconds <= policy_.restart_window_seconds) {
                 const auto metadata = current_;
                 reset();
                 return finish_decision(DecisionKind::complete,
@@ -1358,8 +1363,8 @@ void print_help() {
           --record-once         Stop after one completed or rejected attempt
 
     Configuration:
-      -o, --output <folder>     Set the output root
-      -d, --device <name>       Set the CoreAudio capture device
+      -o, --output <folder>     Persistently set the output root
+      -d, --device <name>       Persistently set the CoreAudio capture device
       -s, --status              Show current configuration and player state
           --list-devices        List AVFoundation audio input devices
 
@@ -1400,8 +1405,8 @@ void print_help_zh() {
           --record-once         完成或隔离一次录音后自动退出
 
     配置:
-      -o, --output <目录>       设置输出根目录
-      -d, --device <设备名>     设置 CoreAudio 录音设备
+      -o, --output <目录>       持久设置输出根目录
+      -d, --device <设备名>     持久设置 CoreAudio 录音设备
       -s, --status              显示配置与当前播放状态
           --list-devices        列出 AVFoundation 音频输入设备
 
@@ -1464,8 +1469,12 @@ void print_status(const Config& config) {
             std::cout << "Track:  " << value.metadata.title << " — " << value.metadata.artist << '\n';
             std::cout << "At:     " << std::fixed << std::setprecision(2) << value.position_seconds
                       << " / " << value.metadata.duration_seconds << " s\n";
-            std::cout << "Local source reference: "
-                      << (value.metadata.source_path.empty() ? "no (position alignment)" : "yes") << '\n';
+            const char* source_status = value.metadata.source_path.empty()
+                ? "no (position alignment)"
+                : std::filesystem::is_regular_file(value.metadata.source_path)
+                    ? "decodable file (source correlation)"
+                    : "protected/download package (position alignment)";
+            std::cout << "Local source reference: " << source_status << '\n';
         }
     }
 }
@@ -1572,6 +1581,7 @@ void run_service(const Config& config, Logger& logger, bool stop_after_first_att
     std::optional<CaptureSlot> reserve;
     std::optional<ProcessingJob> active_job;
     std::string advised_stream_id;
+    std::string waiting_for_restart_id;
     std::exception_ptr service_error;
 
     const auto start_slot = [&]() {
@@ -1600,7 +1610,9 @@ void run_service(const Config& config, Logger& logger, bool stop_after_first_att
         job.raw_flac = slot.path;
         if (snapshot.state == PlayerState::playing &&
             snapshot.metadata.id == job.metadata.id && snapshot.position_seconds >= 0.0 &&
-            snapshot.position_seconds <= 5.0) {
+            capture_covers_track_beginning(
+                std::chrono::duration<double>(snapshot.observed_at - slot.started_at).count(),
+                snapshot.position_seconds)) {
             const double elapsed =
                 std::chrono::duration<double>(snapshot.observed_at - slot.started_at).count();
             job.leading_trim_seconds = std::max(
@@ -1634,8 +1646,7 @@ void run_service(const Config& config, Logger& logger, bool stop_after_first_att
             const Snapshot snapshot = music.snapshot();
             if (active_job && capture &&
                 snapshot.query_ok && snapshot.state == PlayerState::playing &&
-                snapshot.metadata.id == active_job->metadata.id && snapshot.position_seconds >= 0.1 &&
-                snapshot.position_seconds <= 5.0) {
+                snapshot.metadata.id == active_job->metadata.id && snapshot.position_seconds >= 0.1) {
                 const double elapsed =
                     std::chrono::duration<double>(snapshot.observed_at - capture->started_at).count();
                 const double candidate = std::max(
@@ -1647,7 +1658,7 @@ void run_service(const Config& config, Logger& logger, bool stop_after_first_att
             }
             if (!active_job && snapshot.query_ok && snapshot.state == PlayerState::playing &&
                 !snapshot.metadata.id.empty() && snapshot.metadata.source_path.empty() &&
-                snapshot.metadata.id != advised_stream_id && snapshot.position_seconds <= 1.5) {
+                snapshot.metadata.id != advised_stream_id) {
                 advised_stream_id = snapshot.metadata.id;
                 logger.warn("No local source reference for " + snapshot.metadata.title +
                             "; recording is allowed, but downloading first is recommended");
@@ -1658,6 +1669,21 @@ void run_service(const Config& config, Logger& logger, bool stop_after_first_att
 
             if (decision.kind == DecisionKind::start && decision.metadata) {
                 if (!capture) throw std::runtime_error("capture device was not armed at the track beginning");
+                const double available_preroll =
+                    std::chrono::duration<double>(snapshot.observed_at - capture->started_at).count();
+                if (!capture_covers_track_beginning(available_preroll, snapshot.position_seconds)) {
+                    state.reset();
+                    if (snapshot.metadata.id != waiting_for_restart_id) {
+                        waiting_for_restart_id = snapshot.metadata.id;
+                        logger.info("Detected " + snapshot.metadata.title + " at " +
+                                    std::to_string(snapshot.position_seconds) +
+                                    " s, but its beginning is not in the armed pre-roll; "
+                                    "waiting for the next track or a restart from the beginning");
+                    }
+                    std::this_thread::sleep_for(std::chrono::milliseconds(350));
+                    continue;
+                }
+                waiting_for_restart_id.clear();
                 active_job = prepare_job(decision, *capture, snapshot);
                 logger.info("Capturing: " + decision.metadata->title + " — " + decision.metadata->artist);
                 reserve = start_slot();
@@ -1668,11 +1694,27 @@ void run_service(const Config& config, Logger& logger, bool stop_after_first_att
 
                 std::optional<ProcessingJob> following_job;
                 std::optional<Metadata> following_metadata;
-                if (!stop_after_first_attempt) {
+                // Music can briefly report the completed track at position zero before
+                // publishing the next track's metadata. Do not interpret that transient
+                // snapshot as an immediate repeat; the next poll still has the reserve's
+                // complete pre-roll if repeat-one is genuinely enabled.
+                if (!stop_after_first_attempt && decision.metadata &&
+                    snapshot.metadata.id != decision.metadata->id) {
                     const Decision following = state.observe(snapshot);
                     if (following.kind == DecisionKind::start && following.metadata) {
-                        following_job = prepare_job(following, *reserve, snapshot);
-                        following_metadata = following.metadata;
+                        const double available_preroll =
+                            std::chrono::duration<double>(snapshot.observed_at - reserve->started_at).count();
+                        if (capture_covers_track_beginning(available_preroll, snapshot.position_seconds)) {
+                            following_job = prepare_job(following, *reserve, snapshot);
+                            following_metadata = following.metadata;
+                        } else {
+                            state.reset();
+                            waiting_for_restart_id = snapshot.metadata.id;
+                            logger.info("Detected " + snapshot.metadata.title + " at " +
+                                        std::to_string(snapshot.position_seconds) +
+                                        " s, but its beginning is not in the armed pre-roll; "
+                                        "waiting for a restart from the beginning");
+                        }
                     }
                 }
 
@@ -1693,16 +1735,12 @@ void run_service(const Config& config, Logger& logger, bool stop_after_first_att
                 if (stop_after_first_attempt) {
                     service_stop.request_stop();
                 } else if (following_job && following_metadata) {
+                    waiting_for_restart_id.clear();
                     active_job = std::move(*following_job);
                     logger.info("Capturing: " + following_metadata->title + " — " +
                                 following_metadata->artist);
                     reserve = start_slot();
                 }
-            } else if (!active_job && snapshot.query_ok &&
-                       snapshot.state != PlayerState::playing && capture &&
-                       snapshot.observed_at - capture->started_at > std::chrono::seconds(15)) {
-                discard_slot(*capture);
-                capture = start_slot();
             }
 
             std::this_thread::sleep_for(std::chrono::milliseconds(350));
